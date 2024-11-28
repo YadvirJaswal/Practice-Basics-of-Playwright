@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using Practice_Basics_of_Playwright.Core;
 using Practice_Basics_of_Playwright.Models;
 
 namespace Practice_Basics_of_Playwright.Pages
@@ -6,10 +7,11 @@ namespace Practice_Basics_of_Playwright.Pages
     public class SignUpPage
     {
         private readonly IPage page;
-        private readonly AppSettings appSettings;
+        
         private readonly string myAccountPageUrl;
 
         // Locators
+        private ILocator createAnAccountLink;
         private ILocator firstNameInput;
         private ILocator lastNameInput;
         private ILocator emailInput;
@@ -22,12 +24,10 @@ namespace Practice_Basics_of_Playwright.Pages
 
         public SignUpPage(IPage page, AppSettings appSettings)
         {
-            this.page = page;
-
-            this.appSettings = appSettings;
+            this.page = page;           
 
             myAccountPageUrl = $"{appSettings.BaseUrl}/customer/account/";
-
+            createAnAccountLink = page.Locator(".panel.header > ul > li:nth-child(3) > a");
             firstNameInput = page.Locator("#firstname");
             lastNameInput = page.Locator("#lastname");
             emailInput = page.Locator("#email_address");
@@ -36,15 +36,17 @@ namespace Practice_Basics_of_Playwright.Pages
             createAccountButton = page.Locator("button.submit");
             errorMessageForEmail = page.Locator("#email_address-error");
             errorMessageForPassword = page.Locator("#password-error");
-            accountInformation = page.Locator(".box-content");
+            accountInformation = page.Locator(".box-information > .box-content");
         }
-        public async Task SignUp(SignupModel signupModel)
+
+        public async Task SignUp(SignUpUser signupUser)
         {
-            await firstNameInput.FillAsync(signupModel.FirstName);
-            await lastNameInput.FillAsync(signupModel.LastName);
-            await emailInput.FillAsync(signupModel.Email);
-            await passwordInput.FillAsync(signupModel.Password);
-            await confirmPasswordInput.FillAsync(signupModel.ConfirmPassword);
+            await createAnAccountLink.ClickAsync();
+            await firstNameInput.FillAsync(signupUser.FirstName);
+            await lastNameInput.FillAsync(signupUser.LastName);
+            await emailInput.FillAsync(signupUser.Email);
+            await passwordInput.FillAsync(signupUser.Password);
+            await confirmPasswordInput.FillAsync(signupUser.ConfirmPassword);
             await createAccountButton.ClickAsync();
 
         }
@@ -53,12 +55,12 @@ namespace Practice_Basics_of_Playwright.Pages
             return await accountInformation.TextContentAsync() ?? "";
         }
 
-        public async Task<bool> IsSignUpSuccessfull(SignupModel signupModel)
+        public async Task<bool> IsSignUpSuccessfull(SignUpUser signupUser)
         {
             string currentUrl = page.Url;
             string accountInformationText = await GetAccountInformationAsync();
 
-            return currentUrl == myAccountPageUrl && accountInformationText == $"{signupModel.FirstName} {signupModel.LastName}\n{signupModel.Email}";
+            return currentUrl == myAccountPageUrl && accountInformationText == $"{signupUser.FirstName} {signupUser.LastName}\n{signupUser.Email}";
         }
     }
 }

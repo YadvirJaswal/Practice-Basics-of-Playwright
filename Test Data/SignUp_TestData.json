@@ -1,0 +1,16 @@
+{
+    "ValidSignUpUser": {
+        "FirstName": "Rohit",
+        "LastName": "Kumar",
+        "Email": "rohitkumar123@gmail.com",
+        "Password": "Rohit@001",
+        "ConfirmPassword": "Rohit@001"
+    },
+    "InvalidSignUpUser": {
+        "FirstName": "Rohit",
+        "LastName": "Kumar",
+        "Email": "rohitkumar123",
+        "Password": "Rohit@001",
+        "ConfirmPassword": "Rohit@001"
+    }
+}
