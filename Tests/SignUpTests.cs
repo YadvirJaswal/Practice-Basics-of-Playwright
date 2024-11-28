@@ -57,7 +57,7 @@ namespace Practice_Basics_of_Playwright.Tests
         }
 
         [Fact]
-        public async Task SignUp_MisMatchedPasswords_ShouldNotSucceed()
+        public async Task SignUp_MisMatchedPasswords_ShowsErrorMessage()
         {
             // Arrange
             var signUpPage = new SignUpPage(page, appSettings);
