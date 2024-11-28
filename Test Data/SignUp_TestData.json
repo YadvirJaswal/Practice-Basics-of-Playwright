@@ -12,5 +12,12 @@
         "Email": "rohitkumar123",
         "Password": "Rohit@001",
         "ConfirmPassword": "Rohit@001"
+    },
+    "SignUpWithMisMatchedPasswords": {
+        "FirstName": "Rohit",
+        "LastName": "Kumar",
+        "Email": "",
+        "Password": "Rohit@001",
+        "ConfirmPassword": "Rohit"
     }
 }

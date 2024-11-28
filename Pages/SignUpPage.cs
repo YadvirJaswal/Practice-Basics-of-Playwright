@@ -19,7 +19,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator confirmPasswordInput;
         private ILocator createAccountButton;
         private ILocator errorMessageForEmail;
-        private ILocator errorMessageForPassword;
+        private ILocator errorMessageForPasswordConfirmation;
         private ILocator accountInformation;
 
         public SignUpPage(IPage page, AppSettings appSettings)
@@ -35,7 +35,7 @@ namespace Practice_Basics_of_Playwright.Pages
             confirmPasswordInput = page.Locator("#password-confirmation");
             createAccountButton = page.Locator("button.submit");
             errorMessageForEmail = page.Locator("#email_address-error");
-            errorMessageForPassword = page.Locator("#password-error");
+            errorMessageForPasswordConfirmation = page.Locator("#password-confirmation-error");
             accountInformation = page.Locator(".panel.header > ul > li.greet.welcome > span");
         }
 
@@ -68,6 +68,14 @@ namespace Practice_Basics_of_Playwright.Pages
 
             return emailError && string.Equals(emailErrorText.Replace(" ",""),
                 "Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).",StringComparison.OrdinalIgnoreCase);
+        }
+        public async Task<bool> HasPasswordConfirmationErrorOccured()
+        {
+            var passwordConfirmationError = await errorMessageForPasswordConfirmation.IsVisibleAsync();
+            var passwordConfirmationErrorText = await errorMessageForPasswordConfirmation.TextContentAsync();
+
+            return passwordConfirmationError && string.Equals(passwordConfirmationErrorText.Replace(" ",""),
+                "Pleaseenterthesamevalueagain.",StringComparison.OrdinalIgnoreCase);
         }
     }
 }

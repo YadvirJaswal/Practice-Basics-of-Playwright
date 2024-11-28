@@ -53,6 +53,23 @@ namespace Practice_Basics_of_Playwright.Tests
 
             // Assert error message and its text
             bool emailError = await signUpPage.HasEmailErrorOccured();
+            Assert.True(emailError, "Email Error should be occured");
+        }
+
+        [Fact]
+        public async Task SignUp_MisMatchedPasswords_ShouldNotSucceed()
+        {
+            // Arrange
+            var signUpPage = new SignUpPage(page, appSettings);
+            var userData = testData.SignUpWithMisMatchedPasswords;
+            userData.Email = $"{userData.FirstName}.{userData.LastName}-{Guid.NewGuid()}@mailinator.com";
+
+            // Act
+            await signUpPage.SignUp(userData);
+
+            // Assert Error Message for password confirmation and its text
+            bool passwordConfirmationError = await signUpPage.HasPasswordConfirmationErrorOccured();
+            Assert.True(passwordConfirmationError, "Password Confirmation Error should be occured");
         }
     }
 }
