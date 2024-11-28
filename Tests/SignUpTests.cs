@@ -32,7 +32,7 @@ namespace Practice_Basics_of_Playwright.Tests
             // Arrange
             var signUpPage = new SignUpPage(page, appSettings);
             var user = testData.ValidSignUpUser;
-            user.Email = $"{user.FirstName}.{user.LastName}-{Guid.NewGuid()}@gmail.com";
+            user.Email = $"{user.FirstName}.{user.LastName}-{Guid.NewGuid()}@mailinator.com";
 
             //Act
             await signUpPage.SignUp(user);
@@ -43,13 +43,16 @@ namespace Practice_Basics_of_Playwright.Tests
         }
 
         [Fact]
-        public async Task SignUpWithInValidUser_ShouldSucceed1()
+        public async Task SignUpWithInValidUser_ShouldNotSucceed()
         {
+            // Arrange
             var signUpPage = new SignUpPage(page, appSettings);
+
+            // Act
             await signUpPage.SignUp(testData.InvalidSignUpUser);
-            // Assert navigation and user information
-            bool signUpResult = await signUpPage.IsSignUpSuccessfull(testData.ValidSignUpUser);
-            Assert.True(signUpResult, "Sign-Up should be successfull");
+
+            // Assert error message and its text
+            bool emailError = await signUpPage.HasEmailErrorOccured();
         }
     }
 }

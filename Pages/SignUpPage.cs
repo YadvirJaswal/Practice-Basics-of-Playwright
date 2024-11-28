@@ -61,5 +61,13 @@ namespace Practice_Basics_of_Playwright.Pages
                 string.Equals(accountInformationText.Replace(" ", ""),
                 $"Welcome,{signupUser.FirstName}{signupUser.LastName}!",StringComparison.OrdinalIgnoreCase);
         }
+        public async Task<bool> HasEmailErrorOccured()
+        {
+            var emailError = await errorMessageForEmail.IsVisibleAsync();
+            var emailErrorText = await errorMessageForEmail.TextContentAsync();
+
+            return emailError && string.Equals(emailErrorText.Replace(" ",""),
+                "Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).",StringComparison.OrdinalIgnoreCase);
+        }
     }
 }
