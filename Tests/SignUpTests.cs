@@ -30,9 +30,12 @@ namespace Practice_Basics_of_Playwright.Tests
         public async Task SignUpWithValidUser_ShouldSucceed()
         {
             var signUpPage = new SignUpPage(page, appSettings);
-            await signUpPage.SignUp(testData.ValidSignUpUser);
+
+            var user = testData.ValidSignUpUser;
+            user.Email = $"{user.FirstName}.{user.LastName}-{Guid.NewGuid()}@gmail.com";
+            await signUpPage.SignUp(user);
             // Assert navigation and user information
-            bool signUpResult = await signUpPage.IsSignUpSuccessfull(testData.ValidSignUpUser);
+            bool signUpResult = await signUpPage.IsSignUpSuccessfull(user);
             Assert.True(signUpResult, "Sign-Up should be successfull");
         }
 

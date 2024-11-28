@@ -26,7 +26,7 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             this.page = page;           
 
-            myAccountPageUrl = $"{appSettings.BaseUrl}/customer/account/";
+            myAccountPageUrl = $"{appSettings.BaseUrl}customer/account/";
             createAnAccountLink = page.Locator(".panel.header > ul > li:nth-child(3) > a");
             firstNameInput = page.Locator("#firstname");
             lastNameInput = page.Locator("#lastname");
@@ -36,7 +36,7 @@ namespace Practice_Basics_of_Playwright.Pages
             createAccountButton = page.Locator("button.submit");
             errorMessageForEmail = page.Locator("#email_address-error");
             errorMessageForPassword = page.Locator("#password-error");
-            accountInformation = page.Locator(".box-information > .box-content");
+            accountInformation = page.Locator(".panel.header > ul > li.greet.welcome > span");
         }
 
         public async Task SignUp(SignUpUser signupUser)
@@ -50,17 +50,16 @@ namespace Practice_Basics_of_Playwright.Pages
             await createAccountButton.ClickAsync();
 
         }
-        private async Task<string> GetAccountInformationAsync()
-        {
-            return await accountInformation.TextContentAsync() ?? "";
-        }
+
 
         public async Task<bool> IsSignUpSuccessfull(SignUpUser signupUser)
         {
             string currentUrl = page.Url;
-            string accountInformationText = await GetAccountInformationAsync();
+            string accountInformationText = await accountInformation.TextContentAsync() ?? "";
 
-            return currentUrl == myAccountPageUrl && accountInformationText == $"{signupUser.FirstName} {signupUser.LastName}\n{signupUser.Email}";
+            return currentUrl == myAccountPageUrl && 
+                string.Equals(accountInformationText.Replace(" ", ""),
+                $"Welcome,{signupUser.FirstName}{signupUser.LastName}!",StringComparison.OrdinalIgnoreCase);
         }
     }
 }
