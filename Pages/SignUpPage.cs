@@ -20,6 +20,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator createAccountButton;
         private ILocator errorMessageForEmail;
         private ILocator errorMessageForPasswordConfirmation;
+        private ILocator errorMessageForWeakPassword;
         private ILocator accountInformation;
 
         public SignUpPage(IPage page, AppSettings appSettings)
@@ -36,6 +37,7 @@ namespace Practice_Basics_of_Playwright.Pages
             createAccountButton = page.Locator("button.submit");
             errorMessageForEmail = page.Locator("#email_address-error");
             errorMessageForPasswordConfirmation = page.Locator("#password-confirmation-error");
+            errorMessageForWeakPassword = page.Locator("#password-error");
             accountInformation = page.Locator(".panel.header > ul > li.greet.welcome > span");
         }
 
@@ -76,6 +78,15 @@ namespace Practice_Basics_of_Playwright.Pages
 
             return passwordConfirmationError && string.Equals(passwordConfirmationErrorText.Replace(" ",""),
                 "Pleaseenterthesamevalueagain.",StringComparison.OrdinalIgnoreCase);
+        }
+        public async Task<bool> HasErrorOccuredForWeakPassword()
+        {
+            var weakPasswordError = await errorMessageForWeakPassword.IsVisibleAsync();
+            var weakPasswordErrorText = await errorMessageForWeakPassword.TextContentAsync();
+
+            return weakPasswordError && string.Equals(weakPasswordErrorText.Replace(" ", ""),
+                "Minimumlengthofthisfieldmustbeequalorgreaterthan8symbols.Leadingandtrailingspaceswillbeignored.", 
+                StringComparison.OrdinalIgnoreCase);
         }
     }
 }

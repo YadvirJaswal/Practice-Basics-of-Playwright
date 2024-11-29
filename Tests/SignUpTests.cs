@@ -13,7 +13,7 @@ namespace Practice_Basics_of_Playwright.Tests
         public SignUpTests()
         {
            // Load json Test data
-            var jsonContent = File.ReadAllText("Test Data/SignUp_TestData.json");
+            var jsonContent = File.ReadAllText("Test Data/SignupData.json");
             testData = JsonConvert.DeserializeObject<SignUpTestData>(jsonContent) ?? new SignUpTestData();
             if (testData == null)
             {
@@ -70,6 +70,21 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert Error Message for password confirmation and its text
             bool passwordConfirmationError = await signUpPage.HasPasswordConfirmationErrorOccured();
             Assert.True(passwordConfirmationError, "Password Confirmation Error should be occured");
+        }
+        [Fact]
+        public async Task SignUp_WeakPassword_ShowsErrorMessage()
+        {
+            // Arrange
+            var signUpPage = new SignUpPage(page, appSettings);
+            var userData = testData.SignUpWithWeakPassword;
+            userData.Email = $"{userData.FirstName}.{userData.LastName}-{Guid.NewGuid()}@mailinator.com";
+
+            // Act
+            await signUpPage.SignUp(userData);
+
+            // Assert Error Message for password confirmation and its text
+            bool weakPasswordError = await signUpPage.HasErrorOccuredForWeakPassword();
+            Assert.True(weakPasswordError, "Password Error should be occured");
         }
     }
 }
