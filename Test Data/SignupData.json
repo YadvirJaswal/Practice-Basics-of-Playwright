@@ -26,5 +26,12 @@
         "Email": "",
         "Password": "Yad",
         "ConfirmPassword": "Yad"
+    },
+    "SignUpWithEmptyFields": {
+        "FirstName": "",
+        "LastName": "",
+        "Email": "",
+        "Password": "",
+        "ConfirmPassword": ""
     }
 }

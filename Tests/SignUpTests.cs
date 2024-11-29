@@ -84,7 +84,20 @@ namespace Practice_Basics_of_Playwright.Tests
 
             // Assert Error Message for password confirmation and its text
             bool weakPasswordError = await signUpPage.HasErrorOccuredForWeakPassword();
-            Assert.True(weakPasswordError, "Password Error should be occured");
+            Assert.True(weakPasswordError, "Weak password error message not shown");
+        }
+        [Fact]
+        public async Task RequiredFields_AreEmpty_ShouldShowErrorMessages()
+        {
+            // Arrange
+            var signUpPage = new SignUpPage(page, appSettings);
+
+            // Act
+            await signUpPage.SignUp(testData.SignUpWithEmptyFields);
+
+            //Assert
+           var isRequiredMessageShown = await signUpPage.IsRequiredErrorMessageShownAsync();
+            Assert.True(isRequiredMessageShown, "Error message ");
         }
     }
 }

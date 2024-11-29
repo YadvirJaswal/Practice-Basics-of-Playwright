@@ -7,7 +7,7 @@ namespace Practice_Basics_of_Playwright.Pages
     public class SignUpPage
     {
         private readonly IPage page;
-        
+
         private readonly string myAccountPageUrl;
 
         // Locators
@@ -21,11 +21,12 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator errorMessageForEmail;
         private ILocator errorMessageForPasswordConfirmation;
         private ILocator errorMessageForWeakPassword;
+        private ILocator errorMessageForEmptyFields;
         private ILocator accountInformation;
 
         public SignUpPage(IPage page, AppSettings appSettings)
         {
-            this.page = page;           
+            this.page = page;
 
             myAccountPageUrl = $"{appSettings.BaseUrl}customer/account/";
             createAnAccountLink = page.Locator(".panel.header > ul > li:nth-child(3) > a");
@@ -59,25 +60,25 @@ namespace Practice_Basics_of_Playwright.Pages
             string currentUrl = page.Url;
             string accountInformationText = await accountInformation.TextContentAsync() ?? "";
 
-            return currentUrl == myAccountPageUrl && 
+            return currentUrl == myAccountPageUrl &&
                 string.Equals(accountInformationText.Replace(" ", ""),
-                $"Welcome,{signupUser.FirstName}{signupUser.LastName}!",StringComparison.OrdinalIgnoreCase);
+                $"Welcome,{signupUser.FirstName}{signupUser.LastName}!", StringComparison.OrdinalIgnoreCase);
         }
         public async Task<bool> HasEmailErrorOccured()
         {
             var emailError = await errorMessageForEmail.IsVisibleAsync();
             var emailErrorText = await errorMessageForEmail.TextContentAsync();
 
-            return emailError && string.Equals(emailErrorText.Replace(" ",""),
-                "Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).",StringComparison.OrdinalIgnoreCase);
+            return emailError && string.Equals(emailErrorText.Replace(" ", ""),
+                "Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).", StringComparison.OrdinalIgnoreCase);
         }
         public async Task<bool> HasPasswordConfirmationErrorOccured()
         {
             var passwordConfirmationError = await errorMessageForPasswordConfirmation.IsVisibleAsync();
             var passwordConfirmationErrorText = await errorMessageForPasswordConfirmation.TextContentAsync();
 
-            return passwordConfirmationError && string.Equals(passwordConfirmationErrorText.Replace(" ",""),
-                "Pleaseenterthesamevalueagain.",StringComparison.OrdinalIgnoreCase);
+            return passwordConfirmationError && string.Equals(passwordConfirmationErrorText.Replace(" ", ""),
+                "Pleaseenterthesamevalueagain.", StringComparison.OrdinalIgnoreCase);
         }
         public async Task<bool> HasErrorOccuredForWeakPassword()
         {
@@ -85,8 +86,33 @@ namespace Practice_Basics_of_Playwright.Pages
             var weakPasswordErrorText = await errorMessageForWeakPassword.TextContentAsync();
 
             return weakPasswordError && string.Equals(weakPasswordErrorText.Replace(" ", ""),
-                "Minimumlengthofthisfieldmustbeequalorgreaterthan8symbols.Leadingandtrailingspaceswillbeignored.", 
+                "Minimumlengthofthisfieldmustbeequalorgreaterthan8symbols.Leadingandtrailingspaceswillbeignored.",
                 StringComparison.OrdinalIgnoreCase);
+        }
+        public async Task<bool> IsRequiredErrorMessageShownAsync()
+        {
+            var errorClasses = await page.Locator(".mage-error[for]").AllAsync();
+
+            var expectedForValues = new List<string>
+{
+    "firstname",
+    "lastname",
+    "email_address",
+    "password",
+    "password-confirmation"
+};
+            var actualForValues = new List<string>();
+            foreach (var errorClass in errorClasses)
+            {
+                var forAttribute = await errorClass.GetAttributeAsync("for");
+                if (!string.IsNullOrEmpty(forAttribute))
+                {
+                    actualForValues.Add(forAttribute);
+                }
+            }
+
+            bool allValuesPresent = expectedForValues.All(value => actualForValues.Contains(value));
+            return allValuesPresent;
         }
     }
 }
