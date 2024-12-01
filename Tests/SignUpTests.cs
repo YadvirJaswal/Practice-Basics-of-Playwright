@@ -99,5 +99,36 @@ namespace Practice_Basics_of_Playwright.Tests
            var isRequiredMessageShown = await signUpPage.IsRequiredErrorMessageShownAsync();
             Assert.True(isRequiredMessageShown, "Error message ");
         }
+        
+        [Fact]
+        public async Task SignUp_RegisteredEmail_ShouldShownError()
+        {
+            // Arrange
+            var signUpPage = new SignUpPage(page, appSettings);
+
+            // Act
+            await signUpPage.SignUp(testData.SignUpWithRegisteredEmail);
+
+            //Assert
+            var isRegisteredEmailErrorShown = await signUpPage.IsErrorShownForRegisteredEmailAsync();
+            Assert.True(isRegisteredEmailErrorShown, "Error message not shown");
+        }
+        [Fact]
+        public async Task PasswordAndConfirmPasswordFields_EnterPasswords_ShouldToggledToHideTheirVisibility()
+        {
+            // Arrange 
+            var signUpPage = new SignUpPage(page, appSettings);
+
+            //Act
+            await signUpPage.CreateAnAccountLink.ClickAsync();
+            await signUpPage.PasswordInput.FillAsync(testData.ValidSignUpUser.Password);
+            await signUpPage.ConfirmPasswordInput.FillAsync(testData.ValidSignUpUser.ConfirmPassword);
+
+            // Assert
+            var ArePasswordAndConfirmPasswordFieldsToggledToHideTheirVisiblity = await signUpPage.
+                ArePasswordAndConfirmPasswordFieldsToggledToHideTheirVisiblityAsync();
+            Assert.True(ArePasswordAndConfirmPasswordFieldsToggledToHideTheirVisiblity, "Password and confirm fields are" +
+                "not toggled to hide their visiblity");
+        }
     }
 }

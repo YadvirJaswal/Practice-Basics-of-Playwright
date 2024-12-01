@@ -13,6 +13,7 @@ namespace Practice_Basics_of_Playwright.Models
         public SignUpUser SignUpWithMisMatchedPasswords { get; set; }
         public SignUpUser SignUpWithWeakPassword { get; set; }
         public SignUpUser SignUpWithEmptyFields {  get; set; }
+        public SignUpUser SignUpWithRegisteredEmail {  get; set; }
 
     }
     public class SignUpUser

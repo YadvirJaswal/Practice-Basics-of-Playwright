@@ -11,17 +11,18 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly string myAccountPageUrl;
 
         // Locators
-        private ILocator createAnAccountLink;
+        public ILocator CreateAnAccountLink;
         private ILocator firstNameInput;
         private ILocator lastNameInput;
         private ILocator emailInput;
-        private ILocator passwordInput;
-        private ILocator confirmPasswordInput;
+        public ILocator PasswordInput;
+        public ILocator ConfirmPasswordInput;
         private ILocator createAccountButton;
         private ILocator errorMessageForEmail;
         private ILocator errorMessageForPasswordConfirmation;
         private ILocator errorMessageForWeakPassword;
         private ILocator errorMessageForEmptyFields;
+        private ILocator errorMessageForRegisteredEmail;
         private ILocator accountInformation;
 
         public SignUpPage(IPage page, AppSettings appSettings)
@@ -29,27 +30,28 @@ namespace Practice_Basics_of_Playwright.Pages
             this.page = page;
 
             myAccountPageUrl = $"{appSettings.BaseUrl}customer/account/";
-            createAnAccountLink = page.Locator(".panel.header > ul > li:nth-child(3) > a");
+            CreateAnAccountLink = page.Locator(".panel.header > ul > li:nth-child(3) > a");
             firstNameInput = page.Locator("#firstname");
             lastNameInput = page.Locator("#lastname");
             emailInput = page.Locator("#email_address");
-            passwordInput = page.Locator("#password");
-            confirmPasswordInput = page.Locator("#password-confirmation");
+            PasswordInput = page.Locator("#password");
+            ConfirmPasswordInput = page.Locator("#password-confirmation");
             createAccountButton = page.Locator("button.submit");
             errorMessageForEmail = page.Locator("#email_address-error");
             errorMessageForPasswordConfirmation = page.Locator("#password-confirmation-error");
             errorMessageForWeakPassword = page.Locator("#password-error");
+            errorMessageForRegisteredEmail = page.Locator(".page.messages");
             accountInformation = page.Locator(".panel.header > ul > li.greet.welcome > span");
         }
 
         public async Task SignUp(SignUpUser signupUser)
         {
-            await createAnAccountLink.ClickAsync();
+            await CreateAnAccountLink.ClickAsync();
             await firstNameInput.FillAsync(signupUser.FirstName);
             await lastNameInput.FillAsync(signupUser.LastName);
             await emailInput.FillAsync(signupUser.Email);
-            await passwordInput.FillAsync(signupUser.Password);
-            await confirmPasswordInput.FillAsync(signupUser.ConfirmPassword);
+            await PasswordInput.FillAsync(signupUser.Password);
+            await ConfirmPasswordInput.FillAsync(signupUser.ConfirmPassword);
             await createAccountButton.ClickAsync();
 
         }
@@ -113,6 +115,22 @@ namespace Practice_Basics_of_Playwright.Pages
 
             bool allValuesPresent = expectedForValues.All(value => actualForValues.Contains(value));
             return allValuesPresent;
+        }
+        public async Task<bool> IsErrorShownForRegisteredEmailAsync()
+        {
+            await errorMessageForRegisteredEmail.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible,
+            });
+            var registeredEmailError = await errorMessageForRegisteredEmail.IsVisibleAsync();
+            return registeredEmailError;
+        }
+        public async Task<bool> ArePasswordAndConfirmPasswordFieldsToggledToHideTheirVisiblityAsync()
+        {
+            var passwordFieldAttribute = await PasswordInput.GetAttributeAsync("type");
+            var confirmPasswordFieldAttribute = await ConfirmPasswordInput.GetAttributeAsync("type");
+
+            return passwordFieldAttribute == "password" && confirmPasswordFieldAttribute == "password";
         }
     }
 }

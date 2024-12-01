@@ -33,5 +33,13 @@
         "Email": "",
         "Password": "",
         "ConfirmPassword": ""
+    },
+    "SignUpWithRegisteredEmail": {
+        "FirstName": "Yadvir",
+        "LastName": "Kaur",
+        "Email": "yadvirkaur@mailinator.com",
+        "Password": "Yadvir@001",
+        "ConfirmPassword": "Yadvir@001"
+
     }
 }
