@@ -1,0 +1,45 @@
+{
+    "ValidSignUpUser": {
+        "FirstName": "Yadvir",
+        "LastName": "Kaur",
+        "Email": "",
+        "Password": "Yadvir@001",
+        "ConfirmPassword": "Yadvir@001"
+    },
+    "InvalidSignUpUser": {
+        "FirstName": "Yadvir",
+        "LastName": "Kaur",
+        "Email": "YadvirKaur123",
+        "Password": "Yadvir@001",
+        "ConfirmPassword": "Yadvir@001"
+    },
+    "SignUpWithMisMatchedPasswords": {
+        "FirstName": "Yadvir",
+        "LastName": "Kaur",
+        "Email": "",
+        "Password": "Yadvir@001",
+        "ConfirmPassword": "Yadvir"
+    },
+    "SignUpWithWeakPassword": {
+        "FirstName": "Yadvir",
+        "LastName": "Kaur",
+        "Email": "",
+        "Password": "Yad",
+        "ConfirmPassword": "Yad"
+    },
+    "SignUpWithEmptyFields": {
+        "FirstName": "",
+        "LastName": "",
+        "Email": "",
+        "Password": "",
+        "ConfirmPassword": ""
+    },
+    "SignUpWithRegisteredEmail": {
+        "FirstName": "Yadvir",
+        "LastName": "Kaur",
+        "Email": "yadvirkaur@mailinator.com",
+        "Password": "Yadvir@001",
+        "ConfirmPassword": "Yadvir@001"
+
+    }
+}
