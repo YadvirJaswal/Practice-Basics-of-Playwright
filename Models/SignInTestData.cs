@@ -12,6 +12,7 @@ namespace Practice_Basics_of_Playwright.Models
         public SignInUser SignInWithValidEmailInvalidPassword {  get; set; }
         public SignInUser SignInWithInvalidEmailValidPassword {  get; set; }
         public SignInUser SignInWithEmptyFields {  get; set; }
+        public SignInUser SignInWithUngeristeredEmail {  get; set; }
     }
     public class SignInUser
     {

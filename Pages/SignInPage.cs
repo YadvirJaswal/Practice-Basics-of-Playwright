@@ -63,7 +63,7 @@ namespace Practice_Basics_of_Playwright.Pages
             }
             return false;
         }
-        public async Task<bool> IsErrorShownForInvalidPasswordAsync()
+        public async Task<bool> IsErrorShownAsync()
         {
             await errorMessageForPassword.WaitForAsync(new LocatorWaitForOptions
             {

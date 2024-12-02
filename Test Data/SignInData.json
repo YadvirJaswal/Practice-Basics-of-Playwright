@@ -16,6 +16,10 @@
     "SignInWithEmptyFields": {
         "Email": "",
         "Password": ""
+    },
+    "SignInWithUngeristeredEmail": {
+        "Email": "yadvir@mailinator.com",
+        "Password": "Yadvir@001"
     }
 }
 

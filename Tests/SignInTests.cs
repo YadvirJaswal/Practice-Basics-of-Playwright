@@ -44,7 +44,7 @@ namespace Practice_Basics_of_Playwright.Tests
             await signInPage.SignInUser(testData.SignInWithValidEmailInvalidPassword);
 
             // Assert
-            var isErrorMessageShown = await signInPage.IsErrorShownForInvalidPasswordAsync();
+            var isErrorMessageShown = await signInPage.IsErrorShownAsync();
             Assert.True(isErrorMessageShown, "Error message is not shown");
         }
         [Fact]
@@ -73,6 +73,18 @@ namespace Practice_Basics_of_Playwright.Tests
             var isRequiredMessageShown = await signInPage.IsRequiredErrorMessageShownAsync();
             Assert.True(isRequiredMessageShown, "Error message ");
         }
+        [Fact]
+        public async Task SignIn_UnregisteredEmail_ShouldShownErrorMessage()
+        {
+            // Arrange
+            var signInPage = new SignInPage(page, appSettings);
 
+            // Act
+            await signInPage.SignInUser(testData.SignInWithUngeristeredEmail);
+
+            // Assert
+            var isErrorMessageShown = await signInPage.IsErrorShownAsync();
+            Assert.True(isErrorMessageShown, "Error message is not shown");
+        }
     }
 }
