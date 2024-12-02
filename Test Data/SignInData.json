@@ -1,7 +1,9 @@
 {
     "SignInWithValidCredentials": {
         "Email": "yadvirkaur@mailinator.com",
-        "Password": "Yadvir@001"
+        "Password": "Yadvir@001",
+        "FirstName": "Yadvir",
+        "LastName": "Kaur"
     }
 }
 
