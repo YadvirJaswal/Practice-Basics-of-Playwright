@@ -4,6 +4,10 @@
         "Password": "Yadvir@001",
         "FirstName": "Yadvir",
         "LastName": "Kaur"
+    },
+    "SignInWithValidEmailInvalidPassword": {
+        "Email": "yadvirkaur@mailinator.com",
+        "Password": "Yadvir"
     }
 }
 

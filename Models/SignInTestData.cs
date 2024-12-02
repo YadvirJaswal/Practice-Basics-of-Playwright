@@ -9,6 +9,7 @@ namespace Practice_Basics_of_Playwright.Models
     public class SignInTestData
     {
         public SignInUser SignInWithValidCredentials { get; set; }
+        public SignInUser SignInWithValidEmailInvalidPassword {  get; set; }
     }
     public class SignInUser
     {

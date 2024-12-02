@@ -34,5 +34,18 @@ namespace Practice_Basics_of_Playwright.Tests
             var isSignInSuccessfull = await signInPage.IsSignInSuccessfullAsync(userData);
             Assert.True(isSignInSuccessfull, "User is not signed In");
         }
+        [Fact]
+        public async Task SignIn_ValidEmailAndInvalidPassword_ErrorMessageShouldShown()
+        {
+            // Arrange
+            var signInPage = new SignInPage(page, appSettings);
+            
+            // Act
+            await signInPage.SignInUser(testData.SignInWithValidEmailInvalidPassword);
+
+            // Assert
+            var isErrorMessageShown = await signInPage.IsErrorShownForInvalidPasswordAsync();
+            Assert.True(isErrorMessageShown, "Error message is not shown");
+        }
     }
 }

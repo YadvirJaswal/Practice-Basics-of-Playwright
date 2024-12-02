@@ -19,6 +19,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator passwordInput;
         private ILocator signInButton;
         private ILocator welcomeNote;
+        private ILocator errorMessageForPassword;
          
         public SignInPage(IPage page, AppSettings appSettings)
         {
@@ -30,6 +31,7 @@ namespace Practice_Basics_of_Playwright.Pages
             passwordInput = page.Locator("#pass");
             signInButton = page.Locator(".primary#send2");
             welcomeNote = page.Locator(".panel.header > ul > li.greet.welcome > span.logged-in");
+            errorMessageForPassword = page.GetByRole(AriaRole.Alert).First;
 
         }
         public async Task SignInUser(SignInUser signInUser)
@@ -58,6 +60,16 @@ namespace Practice_Basics_of_Playwright.Pages
                     StringComparison.OrdinalIgnoreCase);
             }
             return false;
+        }
+        public async Task<bool> IsErrorShownForInvalidPasswordAsync()
+        {
+            await errorMessageForPassword.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible
+            });
+            await errorMessageForPassword.ScrollIntoViewIfNeededAsync();
+            var isErrorMessageVisible = await errorMessageForPassword.IsVisibleAsync();
+            return isErrorMessageVisible;
         }
     }
 }
