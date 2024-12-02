@@ -28,7 +28,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var userData = testData.SignInWithValidCredentials;
 
             // Act
-            await signInPage.SignInUser(userData);
+            await signInPage.SignInUserAsync(userData);
 
             // Assert
             var isSignInSuccessfull = await signInPage.IsSignInSuccessfullAsync(userData);
@@ -41,7 +41,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
             
             // Act
-            await signInPage.SignInUser(testData.SignInWithValidEmailInvalidPassword);
+            await signInPage.SignInUserAsync(testData.SignInWithValidEmailInvalidPassword);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
@@ -54,7 +54,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             // Act
-            await signInPage.SignInUser(testData.SignInWithInvalidEmailValidPassword);
+            await signInPage.SignInUserAsync(testData.SignInWithInvalidEmailValidPassword);
 
             //Assert
             var isErrorShown = await signInPage.IsErrorShownForInvalidEmailAsync();
@@ -67,7 +67,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             // Act
-            await signInPage.SignInUser(testData.SignInWithEmptyFields);
+            await signInPage.SignInUserAsync(testData.SignInWithEmptyFields);
 
             //Assert
             var isRequiredMessageShown = await signInPage.IsRequiredErrorMessageShownAsync();
@@ -80,11 +80,24 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             // Act
-            await signInPage.SignInUser(testData.SignInWithUngeristeredEmail);
+            await signInPage.SignInUserAsync(testData.SignInWithUngeristeredEmail);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
             Assert.True(isErrorMessageShown, "Error message is not shown");
+        }
+        [Fact]
+        public async Task Password_EnterPassword_ShouldToggledToHideItsVisibility()
+        {
+            // Arrange 
+            var signInPage = new SignInPage(page, appSettings);
+
+            //Act
+            await signInPage.EnterPasswordAsync(testData.SignInWithValidCredentials);
+
+            // Assert
+            var isPasswordToggledToHideItsVisiblity = await signInPage.IsPasswordFieldToggledToHideItsVisibilityAsync();
+            Assert.True(isPasswordToggledToHideItsVisiblity, "Password is not toggled to hide its visiblity");
         }
     }
 }

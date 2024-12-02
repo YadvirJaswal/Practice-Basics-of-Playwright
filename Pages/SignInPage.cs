@@ -36,7 +36,7 @@ namespace Practice_Basics_of_Playwright.Pages
             errorMessageForEmail = page.Locator("#email-error");
 
         }
-        public async Task SignInUser(SignInUser signInUser)
+        public async Task SignInUserAsync(SignInUser signInUser)
         {
             await signInNavigationButton.ClickAsync();
             await emailInput.ClearAsync();
@@ -44,6 +44,12 @@ namespace Practice_Basics_of_Playwright.Pages
             await passwordInput.ClearAsync();
             await passwordInput.FillAsync(signInUser.Password);
             await signInButton.ClickAsync();
+        }
+        public async Task EnterPasswordAsync(SignInUser signInUser)
+        {
+            await signInNavigationButton.ClickAsync();
+            await passwordInput.ClearAsync();
+            await passwordInput.FillAsync(signInUser.Password);
         }
         public async Task<bool> IsSignInSuccessfullAsync(SignInUser signInUser)
         {
@@ -104,6 +110,11 @@ namespace Practice_Basics_of_Playwright.Pages
             }
             bool areValuesPresent = expectedForValues.All(value => actualValues.Contains(value));
             return areValuesPresent && isErrorTextCorrect;
+        }
+        public async Task<bool> IsPasswordFieldToggledToHideItsVisibilityAsync()
+        {
+            var passFieldType = await passwordInput.GetAttributeAsync("type");
+            return passFieldType == "password";
         }
     }
 }
