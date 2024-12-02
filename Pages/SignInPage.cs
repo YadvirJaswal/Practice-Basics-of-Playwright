@@ -80,5 +80,30 @@ namespace Practice_Basics_of_Playwright.Pages
             return isErrorShown && string.Equals(errorMessageForEmailText.Replace(" ",""),
                 $"Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).", StringComparison.OrdinalIgnoreCase);
         }
+        public async Task<bool> IsRequiredErrorMessageShownAsync()
+        {
+            var errorClasses = await page.Locator(".mage-error[for]").AllAsync();
+
+            var expectedForValues = new List<string>
+            {
+                "email",
+                "pass"
+            };
+            var actualValues = new List<string>();
+            bool isErrorTextCorrect = false;
+            foreach (var errorClass in errorClasses)
+            {
+                var forAttributeValue = await errorClass.GetAttributeAsync("for");
+                if (!string.IsNullOrEmpty(forAttributeValue))
+                {
+                    actualValues.Add(forAttributeValue);
+                }
+                var errorMessageText = await errorClass.TextContentAsync();
+                isErrorTextCorrect = string.Equals(errorMessageText.Replace(" ", ""), "Thisisarequiredfield.",
+                    StringComparison.OrdinalIgnoreCase);
+            }
+            bool areValuesPresent = expectedForValues.All(value => actualValues.Contains(value));
+            return areValuesPresent && isErrorTextCorrect;
+        }
     }
 }

@@ -60,5 +60,19 @@ namespace Practice_Basics_of_Playwright.Tests
             var isErrorShown = await signInPage.IsErrorShownForInvalidEmailAsync();
             Assert.True(isErrorShown, "Error message is not shown");
         }
+        [Fact]
+        public async Task RequiredFields_AreEmpty_ShouldShowErrorMessages()
+        {
+            // Arrange
+            var signInPage = new SignInPage(page, appSettings);
+
+            // Act
+            await signInPage.SignInUser(testData.SignInWithEmptyFields);
+
+            //Assert
+            var isRequiredMessageShown = await signInPage.IsRequiredErrorMessageShownAsync();
+            Assert.True(isRequiredMessageShown, "Error message ");
+        }
+
     }
 }

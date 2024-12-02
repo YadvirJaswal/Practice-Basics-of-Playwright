@@ -12,6 +12,10 @@
     "SignInWithInvalidEmailValidPassword": {
         "Email": "yadvirkaur",
         "Password": "Yadvir@001"
+    },
+    "SignInWithEmptyFields": {
+        "Email": "",
+        "Password": ""
     }
 }
 
