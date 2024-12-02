@@ -47,5 +47,18 @@ namespace Practice_Basics_of_Playwright.Tests
             var isErrorMessageShown = await signInPage.IsErrorShownForInvalidPasswordAsync();
             Assert.True(isErrorMessageShown, "Error message is not shown");
         }
+        [Fact]
+        public async Task SignIn_InvalidEmailAndValidPassword_ErrorMessageShouldShown()
+        {
+            // Arrange
+            var signInPage = new SignInPage(page, appSettings);
+
+            // Act
+            await signInPage.SignInUser(testData.SignInWithInvalidEmailValidPassword);
+
+            //Assert
+            var isErrorShown = await signInPage.IsErrorShownForInvalidEmailAsync();
+            Assert.True(isErrorShown, "Error message is not shown");
+        }
     }
 }

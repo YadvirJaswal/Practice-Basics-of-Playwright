@@ -8,6 +8,10 @@
     "SignInWithValidEmailInvalidPassword": {
         "Email": "yadvirkaur@mailinator.com",
         "Password": "Yadvir"
+    },
+    "SignInWithInvalidEmailValidPassword": {
+        "Email": "yadvirkaur",
+        "Password": "Yadvir@001"
     }
 }
 

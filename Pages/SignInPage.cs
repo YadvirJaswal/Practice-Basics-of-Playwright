@@ -20,6 +20,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator signInButton;
         private ILocator welcomeNote;
         private ILocator errorMessageForPassword;
+        private ILocator errorMessageForEmail;
          
         public SignInPage(IPage page, AppSettings appSettings)
         {
@@ -32,6 +33,7 @@ namespace Practice_Basics_of_Playwright.Pages
             signInButton = page.Locator(".primary#send2");
             welcomeNote = page.Locator(".panel.header > ul > li.greet.welcome > span.logged-in");
             errorMessageForPassword = page.GetByRole(AriaRole.Alert).First;
+            errorMessageForEmail = page.Locator("#email-error");
 
         }
         public async Task SignInUser(SignInUser signInUser)
@@ -70,6 +72,13 @@ namespace Practice_Basics_of_Playwright.Pages
             await errorMessageForPassword.ScrollIntoViewIfNeededAsync();
             var isErrorMessageVisible = await errorMessageForPassword.IsVisibleAsync();
             return isErrorMessageVisible;
+        }
+        public async Task<bool> IsErrorShownForInvalidEmailAsync()
+        {
+            var isErrorShown = await errorMessageForEmail.IsVisibleAsync();
+            var errorMessageForEmailText = await errorMessageForEmail.TextContentAsync();
+            return isErrorShown && string.Equals(errorMessageForEmailText.Replace(" ",""),
+                $"Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
