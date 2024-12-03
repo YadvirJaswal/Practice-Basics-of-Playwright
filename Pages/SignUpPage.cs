@@ -132,5 +132,6 @@ namespace Practice_Basics_of_Playwright.Pages
 
             return passwordFieldAttribute == "password" && confirmPasswordFieldAttribute == "password";
         }
+        
     }
 }

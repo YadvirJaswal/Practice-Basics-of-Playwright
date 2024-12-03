@@ -99,5 +99,18 @@ namespace Practice_Basics_of_Playwright.Tests
             var isPasswordToggledToHideItsVisiblity = await signInPage.IsPasswordFieldToggledToHideItsVisibilityAsync();
             Assert.True(isPasswordToggledToHideItsVisiblity, "Password is not toggled to hide its visiblity");
         }
+        [Fact]
+        public async Task RequiredFileds_ShouldBeMarkedAsRequired()
+        {
+            // Arrange 
+            var signInPage = new SignInPage(page, appSettings);
+
+            //Act
+            await signInPage.EnterPasswordAsync(testData.SignInWithValidEmailInvalidPassword);
+         
+            // Assert
+            var areRequiredFieldsMarked = await signInPage.AreRequiredFiledsMarkedAsMandatoryAsync();
+            Assert.True(areRequiredFieldsMarked, "Required Fields are not marked");
+        }
     }
 }

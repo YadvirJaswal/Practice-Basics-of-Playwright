@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using Practice_Basics_of_Playwright.Models;
 
 namespace Practice_Basics_of_Playwright.Pages
@@ -14,14 +16,14 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly IPage page;
         private readonly string homePageUrl;
 
-        private ILocator signInNavigationButton;
+        public ILocator signInNavigationButton;
         private ILocator emailInput;
         private ILocator passwordInput;
         private ILocator signInButton;
         private ILocator welcomeNote;
         private ILocator errorMessageForPassword;
         private ILocator errorMessageForEmail;
-         
+
         public SignInPage(IPage page, AppSettings appSettings)
         {
             this.page = page;
@@ -83,7 +85,7 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             var isErrorShown = await errorMessageForEmail.IsVisibleAsync();
             var errorMessageForEmailText = await errorMessageForEmail.TextContentAsync();
-            return isErrorShown && string.Equals(errorMessageForEmailText.Replace(" ",""),
+            return isErrorShown && string.Equals(errorMessageForEmailText.Replace(" ", ""),
                 $"Pleaseenteravalidemailaddress(Ex:johndoe@domain.com).", StringComparison.OrdinalIgnoreCase);
         }
         public async Task<bool> IsRequiredErrorMessageShownAsync()
@@ -115,6 +117,20 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             var passFieldType = await passwordInput.GetAttributeAsync("type");
             return passFieldType == "password";
+        }
+        public async Task<bool> AreRequiredFiledsMarkedAsMandatoryAsync()
+        {
+            await page.Locator("#login-form > fieldset.login").WaitForAsync();
+
+            var requiredClass = page.Locator("#login-form > fieldset.login");
+            var requiredFieldClasses = await requiredClass.Locator(".required > div> input").AllAsync();
+            await page.WaitForRequestFinishedAsync();
+            var requiredAttribute = "";
+            foreach (var requiredFieldClass in requiredFieldClasses)
+            {
+                requiredAttribute = await requiredFieldClass.GetAttributeAsync("aria-required");
+            }
+            return string.Equals(requiredAttribute, "true");
         }
     }
 }
