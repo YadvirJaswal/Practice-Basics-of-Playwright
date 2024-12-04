@@ -12,12 +12,16 @@ namespace Practice_Basics_of_Playwright.Tests
 {
     public class SignInTests : BaseTest
     {
-        private readonly SignInTestData testData;
+        private readonly SignInTestData testData_SignIn;
+        private readonly SignUpTestData testData_SignUp;
         public SignInTests()
         {
             // Load data from json
-            var jsonContent = File.ReadAllText("Test Data/SignInData.json");
-            testData = JsonConvert.DeserializeObject<SignInTestData>(jsonContent) ?? new SignInTestData();
+            var jsonContent_SignIn = File.ReadAllText("Test Data/SignInData.json");
+            testData_SignIn = JsonConvert.DeserializeObject<SignInTestData>(jsonContent_SignIn) ?? new SignInTestData();
+
+            var jsonContent_SignUp = File.ReadAllText("Test Data/SignupData.json");
+            testData_SignUp = JsonConvert.DeserializeObject<SignUpTestData>(jsonContent_SignUp) ?? new SignUpTestData();
         }
 
         [Fact]
@@ -25,7 +29,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
-            var userData = testData.SignInWithValidCredentials;
+            var userData = testData_SignIn.SignInWithValidCredentials;
 
             // Act
             await signInPage.SignInUserAsync(userData);
@@ -41,7 +45,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
             
             // Act
-            await signInPage.SignInUserAsync(testData.SignInWithValidEmailInvalidPassword);
+            await signInPage.SignInUserAsync(testData_SignIn.SignInWithValidEmailInvalidPassword);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
@@ -54,7 +58,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             // Act
-            await signInPage.SignInUserAsync(testData.SignInWithInvalidEmailValidPassword);
+            await signInPage.SignInUserAsync(testData_SignIn.SignInWithInvalidEmailValidPassword);
 
             //Assert
             var isErrorShown = await signInPage.IsErrorShownForInvalidEmailAsync();
@@ -67,7 +71,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             // Act
-            await signInPage.SignInUserAsync(testData.SignInWithEmptyFields);
+            await signInPage.SignInUserAsync(testData_SignIn.SignInWithEmptyFields);
 
             //Assert
             var isRequiredMessageShown = await signInPage.IsRequiredErrorMessageShownAsync();
@@ -80,7 +84,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             // Act
-            await signInPage.SignInUserAsync(testData.SignInWithUngeristeredEmail);
+            await signInPage.SignInUserAsync(testData_SignIn.SignInWithUngeristeredEmail);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
@@ -93,7 +97,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             //Act
-            await signInPage.EnterPasswordAsync(testData.SignInWithValidCredentials);
+            await signInPage.EnterPasswordAsync(testData_SignIn.SignInWithValidCredentials);
 
             // Assert
             var isPasswordToggledToHideItsVisiblity = await signInPage.IsPasswordFieldToggledToHideItsVisibilityAsync();
@@ -106,11 +110,35 @@ namespace Practice_Basics_of_Playwright.Tests
             var signInPage = new SignInPage(page, appSettings);
 
             //Act
-            await signInPage.EnterPasswordAsync(testData.SignInWithValidEmailInvalidPassword);
+            await signInPage.EnterPasswordAsync(testData_SignIn.SignInWithValidEmailInvalidPassword);
          
             // Assert
             var areRequiredFieldsMarked = await signInPage.AreRequiredFiledsMarkedAsMandatoryAsync();
             Assert.True(areRequiredFieldsMarked, "Required Fields are not marked");
+        }
+        [Fact]
+        public async Task SignInPage_VerifyCreateAnAccountOption_ShouldBeRegisteredAndSignedIn()
+        {
+            // Arrange 
+            var signInPage = new SignInPage(page, appSettings);
+            var signUpPage = new SignUpPage(page, appSettings);
+            var user = testData_SignUp.ValidSignUpUser;
+            user.Email = $"{user.FirstName}.{user.LastName}-{Guid.NewGuid()}@mailinator.com";
+
+            // Act
+            await signInPage.ClickOnCreateAnAccountButtonAsync();
+
+            // Assert Navigation
+            var isNavigateToSignUpPage = await signInPage.IsNavigateToSignUpPageAsync();
+            Assert.True(isNavigateToSignUpPage, "User is not navigated to signup page.");
+
+            //Act
+            await signUpPage.SignUpUserFromSigninPage(user);
+
+
+            // Assert registeration
+            var isSignUpSuccessfull = await signUpPage.IsSignUpSuccessfull(user);
+            Assert.True(isSignUpSuccessfull, "User is not registered.");
         }
     }
 }

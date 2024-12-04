@@ -41,7 +41,7 @@ namespace Practice_Basics_of_Playwright.Pages
             errorMessageForPasswordConfirmation = page.Locator("#password-confirmation-error");
             errorMessageForWeakPassword = page.Locator("#password-error");
             errorMessageForRegisteredEmail = page.Locator(".page.messages");
-            accountInformation = page.Locator(".panel.header > ul > li.greet.welcome > span");
+            accountInformation = page.Locator(".panel.header > ul > li.greet.welcome > span.logged-in");
         }
 
         public async Task SignUp(SignUpUser signupUser)
@@ -55,10 +55,20 @@ namespace Practice_Basics_of_Playwright.Pages
             await createAccountButton.ClickAsync();
 
         }
-
+        public async Task SignUpUserFromSigninPage(SignUpUser signupUser)
+        {
+            
+            await firstNameInput.FillAsync(signupUser.FirstName);
+            await lastNameInput.FillAsync(signupUser.LastName);
+            await emailInput.FillAsync(signupUser.Email);
+            await PasswordInput.FillAsync(signupUser.Password);
+            await ConfirmPasswordInput.FillAsync(signupUser.ConfirmPassword);
+            await createAccountButton.ClickAsync();
+        }
 
         public async Task<bool> IsSignUpSuccessfull(SignUpUser signupUser)
         {
+            await page.WaitForURLAsync(myAccountPageUrl);
             string currentUrl = page.Url;
             string accountInformationText = await accountInformation.TextContentAsync() ?? "";
 

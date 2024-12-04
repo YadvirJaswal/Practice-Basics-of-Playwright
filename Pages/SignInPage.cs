@@ -23,6 +23,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator welcomeNote;
         private ILocator errorMessageForPassword;
         private ILocator errorMessageForEmail;
+        private ILocator createAnAccountButton;
 
         public SignInPage(IPage page, AppSettings appSettings)
         {
@@ -36,7 +37,8 @@ namespace Practice_Basics_of_Playwright.Pages
             welcomeNote = page.Locator(".panel.header > ul > li.greet.welcome > span.logged-in");
             errorMessageForPassword = page.GetByRole(AriaRole.Alert).First;
             errorMessageForEmail = page.Locator("#email-error");
-
+            createAnAccountButton = page.GetByLabel("New Customers").GetByRole(AriaRole.Link, new() 
+                                    { Name = "Create an Account" });
         }
         public async Task SignInUserAsync(SignInUser signInUser)
         {
@@ -52,6 +54,11 @@ namespace Practice_Basics_of_Playwright.Pages
             await signInNavigationButton.ClickAsync();
             await passwordInput.ClearAsync();
             await passwordInput.FillAsync(signInUser.Password);
+        }
+        public async Task ClickOnCreateAnAccountButtonAsync()
+        {
+            await signInNavigationButton.ClickAsync();
+            await createAnAccountButton.ClickAsync();
         }
         public async Task<bool> IsSignInSuccessfullAsync(SignInUser signInUser)
         {
@@ -131,6 +138,12 @@ namespace Practice_Basics_of_Playwright.Pages
                 requiredAttribute = await requiredFieldClass.GetAttributeAsync("aria-required");
             }
             return string.Equals(requiredAttribute, "true");
+        }
+        public async Task<bool> IsNavigateToSignUpPageAsync()
+        {
+            var actualUrl =   page.Url;
+            var expectedUrl = "https://magento.softwaretestingboard.com/customer/account/create/";
+            return actualUrl == expectedUrl;
         }
     }
 }
