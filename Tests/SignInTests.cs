@@ -14,8 +14,25 @@ namespace Practice_Basics_of_Playwright.Tests
     {
         private readonly SignInTestData testData_SignIn;
         private readonly SignUpTestData testData_SignUp;
+        private readonly Dictionary<string, List<TestCase>> testCaseData;
+
+        private const string signupSheetName = "SignUp_Tests";
+        private const string signInSheetName = "SignIn_Tests";
+
+        private readonly List<TestCase> signInTestCasesList;
+        private readonly List<TestCase> signUpTestCasesList;
         public SignInTests()
         {
+            testCaseData = excelReader.ReadExcelFile("Test Data/ECT-TestCases.xlsx", [signupSheetName,signInSheetName]);
+
+            signInTestCasesList = testCaseData[signInSheetName];
+            signUpTestCasesList = testCaseData[signupSheetName];
+
+            if (signInTestCasesList.Count == 0)
+            {
+                throw new Exception("No test cases found");
+            }
+
             // Load data from json
             var jsonContent_SignIn = File.ReadAllText("Test Data/SignInData.json");
             testData_SignIn = JsonConvert.DeserializeObject<SignInTestData>(jsonContent_SignIn) ?? new SignInTestData();
@@ -24,80 +41,127 @@ namespace Practice_Basics_of_Playwright.Tests
             testData_SignUp = JsonConvert.DeserializeObject<SignUpTestData>(jsonContent_SignUp) ?? new SignUpTestData();
         }
 
-        [Fact]
-        public async Task SignIn_ValidCredentials_ShouldSucceed()
+        [Theory]
+        [InlineData("TC-SIGNIN-001")]
+        public async Task SignIn_ValidCredentials_ShouldSucceed(string testCaseId)
         {
-            // Arrange
-            var signInPage = new SignInPage(page,appSettings);
-            var userData = testData_SignIn.SignInWithValidCredentials;
+            try
+            {
+                // update in progress status in Excel
+                // Arrange
+                var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+                Assert.NotNull(testCase);
+                Assert.NotEmpty(testCase.TestData);
+                var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+                Assert.NotNull(testData);
 
-            // Act
-            await signInPage.SignInUserAsync(userData);
+                var signInPage = new SignInPage(page, appSettings);
 
-            // Assert
-            var isSignInSuccessfull = await signInPage.IsSignInSuccessfullAsync(userData);
-            Assert.True(isSignInSuccessfull, "User is not signed In");
+                // Act
+                await signInPage.SignInUserAsync(testData);
+
+                // Assert
+                var isSignInSuccessfull = await signInPage.IsSignInSuccessfullAsync(testData);
+                Assert.True(isSignInSuccessfull, "User is not signed In");
+
+                // if it reaches here it means the test cases has passes - update passed status in excel
+            }
+            catch (Exception ex)
+            {
+                // testcase failed - update failed status in excel
+                // create a bug in Github issues
+            }
         }
-        [Fact]
-        public async Task SignIn_ValidEmailAndInvalidPassword_ErrorMessageShouldShown()
+        [Theory]
+        [InlineData("TC-SIGNIN-002")]
+        public async Task SignIn_ValidEmailAndInvalidPassword_ErrorMessageShouldShown(string testCaseId)
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
             
             // Act
-            await signInPage.SignInUserAsync(testData_SignIn.SignInWithValidEmailInvalidPassword);
+            await signInPage.SignInUserAsync(testData);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
             Assert.True(isErrorMessageShown, "Error message is not shown");
         }
-        [Fact]
-        public async Task SignIn_InvalidEmailAndValidPassword_ErrorMessageShouldShown()
+        [Theory]
+        [InlineData("TC-SIGNIN-003")]
+        public async Task SignIn_InvalidEmailAndValidPassword_ErrorMessageShouldShown(string testCaseId)
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
 
             // Act
-            await signInPage.SignInUserAsync(testData_SignIn.SignInWithInvalidEmailValidPassword);
+            await signInPage.SignInUserAsync(testData);
 
             //Assert
             var isErrorShown = await signInPage.IsErrorShownForInvalidEmailAsync();
             Assert.True(isErrorShown, "Error message is not shown");
         }
-        [Fact]
-        public async Task RequiredFields_AreEmpty_ShouldShowErrorMessages()
+        [Theory]
+        [InlineData("TC-SIGNIN-004")]
+        public async Task RequiredFields_AreEmpty_ShouldShowErrorMessages(string testCaseId)
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
 
             // Act
-            await signInPage.SignInUserAsync(testData_SignIn.SignInWithEmptyFields);
+            await signInPage.SignInUserAsync(testData);
 
             //Assert
             var isRequiredMessageShown = await signInPage.IsRequiredErrorMessageShownAsync();
             Assert.True(isRequiredMessageShown, "Error message ");
         }
-        [Fact]
-        public async Task SignIn_UnregisteredEmail_ShouldShownErrorMessage()
+        [Theory]
+        [InlineData("TC-SIGNIN-005")]
+        public async Task SignIn_UnregisteredEmail_ShouldShownErrorMessage(string testCaseId)
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
 
             // Act
-            await signInPage.SignInUserAsync(testData_SignIn.SignInWithUngeristeredEmail);
+            await signInPage.SignInUserAsync(testData);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
             Assert.True(isErrorMessageShown, "Error message is not shown");
         }
-        [Fact]
-        public async Task Password_EnterPassword_ShouldToggledToHideItsVisibility()
+        [Theory]
+        [InlineData("TC-SIGNIN-006")]
+        public async Task Password_EnterPassword_ShouldToggledToHideItsVisibility(string testCaseId)
         {
             // Arrange 
             var signInPage = new SignInPage(page, appSettings);
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
 
             //Act
-            await signInPage.EnterPasswordAsync(testData_SignIn.SignInWithValidCredentials);
+            await signInPage.EnterPasswordAsync(testData);
 
             // Assert
             var isPasswordToggledToHideItsVisiblity = await signInPage.IsPasswordFieldToggledToHideItsVisibilityAsync();
@@ -116,14 +180,22 @@ namespace Practice_Basics_of_Playwright.Tests
             var areRequiredFieldsMarked = await signInPage.AreRequiredFiledsMarkedAsMandatoryAsync();
             Assert.True(areRequiredFieldsMarked, "Required Fields are not marked");
         }
-        [Fact]
-        public async Task SignInPage_VerifyCreateAnAccountOption_ShouldBeRegisteredAndSignedIn()
+
+        [Theory]
+        [InlineData("TC-SIGNUP-001")]
+        public async Task SignInPage_VerifyCreateAnAccountOption_ShouldBeRegisteredAndSignedIn(string testCaseId)
         {
             // Arrange 
+            var testCase = signUpTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testUserData = JsonConvert.DeserializeObject<SignUpUser>(testCase.TestData);
+            Assert.NotNull(testUserData);
+
             var signInPage = new SignInPage(page, appSettings);
             var signUpPage = new SignUpPage(page, appSettings);
-            var user = testData_SignUp.ValidSignUpUser;
-            user.Email = $"{user.FirstName}.{user.LastName}-{Guid.NewGuid()}@mailinator.com";
+            
+            testUserData.Email = $"{testUserData.FirstName}.{testUserData.LastName}-{Guid.NewGuid()}@mailinator.com";
 
             // Act
             await signInPage.ClickOnCreateAnAccountButtonAsync();
@@ -133,12 +205,31 @@ namespace Practice_Basics_of_Playwright.Tests
             Assert.True(isNavigateToSignUpPage, "User is not navigated to signup page.");
 
             //Act
-            await signUpPage.SignUpUserFromSigninPage(user);
+            await signUpPage.SignUpUserFromSigninPage(testUserData);
 
 
             // Assert registeration
-            var isSignUpSuccessfull = await signUpPage.IsSignUpSuccessfull(user);
+            var isSignUpSuccessfull = await signUpPage.IsSignUpSuccessfull(testUserData);
             Assert.True(isSignUpSuccessfull, "User is not registered.");
+        }
+        [Theory]
+        [InlineData("TC-SIGNIN-009")]
+        public async Task Email_VerifyCaseSenstivity_ShouldBeSignedIn(string testCaseId)
+        {
+            // Arrange
+            var signInPage = new SignInPage(page,appSettings);
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
+
+            // Act
+           await signInPage.SignInUserAsync(testData);
+
+            //Assert
+            var isSignInSuccessful = await signInPage.IsSignInSuccessfullAsync(testData);
+            Assert.True(isSignInSuccessful, "User is not signed In");
         }
     }
 }
