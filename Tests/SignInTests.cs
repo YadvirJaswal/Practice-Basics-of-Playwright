@@ -231,5 +231,24 @@ namespace Practice_Basics_of_Playwright.Tests
             var isSignInSuccessful = await signInPage.IsSignInSuccessfullAsync(testData);
             Assert.True(isSignInSuccessful, "User is not signed In");
         }
+        [Theory]
+        [InlineData("TC-SIGNIN-010")]
+        public async Task Password_VerifyCaseSenstivity_SignInShouldFail(string testCaseId)
+        {
+            //Arrange
+            var signInPage = new SignInPage(page, appSettings); 
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
+
+            // Act
+            await signInPage.SignInUserAsync(testData);
+
+            // Assert
+            var isErrorShown = await signInPage.IsErrorShownAsync();
+            Assert.True(isErrorShown, "Error is not shown");
+        }
     }
 }
