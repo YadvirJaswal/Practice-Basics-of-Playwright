@@ -274,5 +274,18 @@ namespace Practice_Basics_of_Playwright.Tests
             var isErrorShown = await signInPage.IsErrorShownAsync();
             Assert.True(isErrorShown, "Error is not shown");
         }
+        [Fact]
+        public async Task ForgotPassword_ClickOnForgotPasswordLink_ShouldBeRedirectedToForgotPasswordPage()
+        {
+            // Arrange
+            var signInPage = new SignInPage(page,appSettings);
+
+            // Act
+            await signInPage.ClickOnForgotPasswordLinkAsync();
+
+            // Assert
+            var isNavigatedToForgotPasswordPage = await signInPage.IsNavigatedToForgotPasswordPageAsync();
+            Assert.True(isNavigatedToForgotPasswordPage, "User is not navigated to Forgot Password Page.");
+        }
     }
 }

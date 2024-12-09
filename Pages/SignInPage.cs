@@ -15,6 +15,7 @@ namespace Practice_Basics_of_Playwright.Pages
     {
         private readonly IPage page;
         private readonly string homePageUrl;
+        private readonly string forgotPasswordPageUrl;
 
         public ILocator signInNavigationButton;
         private ILocator emailInput;
@@ -24,11 +25,13 @@ namespace Practice_Basics_of_Playwright.Pages
         private ILocator errorMessageForPassword;
         private ILocator errorMessageForEmail;
         private ILocator createAnAccountButton;
+        private ILocator forgotPasswordLink;
 
         public SignInPage(IPage page, AppSettings appSettings)
         {
             this.page = page;
             homePageUrl = appSettings.BaseUrl;
+            forgotPasswordPageUrl = $"{appSettings.BaseUrl}customer/account/forgotpassword/";
 
             signInNavigationButton = page.Locator(".panel.header > ul > li:nth-child(2) > a");
             emailInput = page.Locator("#email");
@@ -39,6 +42,7 @@ namespace Practice_Basics_of_Playwright.Pages
             errorMessageForEmail = page.Locator("#email-error");
             createAnAccountButton = page.GetByLabel("New Customers").GetByRole(AriaRole.Link, new() 
                                     { Name = "Create an Account" });
+            forgotPasswordLink = page.Locator(".action.remind");
         }
         public async Task SignInUserAsync(SignInUser signInUser)
         {
@@ -59,6 +63,11 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             await signInNavigationButton.ClickAsync();
             await createAnAccountButton.ClickAsync();
+        }
+        public async Task ClickOnForgotPasswordLinkAsync()
+        {
+            await signInNavigationButton.ClickAsync();
+            await forgotPasswordLink.ClickAsync();
         }
         public async Task<bool> IsSignInSuccessfullAsync(SignInUser signInUser)
         {
@@ -144,6 +153,13 @@ namespace Practice_Basics_of_Playwright.Pages
             var actualUrl =   page.Url;
             var expectedUrl = "https://magento.softwaretestingboard.com/customer/account/create/";
             return actualUrl == expectedUrl;
+        }
+        public async Task<bool> IsNavigatedToForgotPasswordPageAsync()
+        {
+            var pageUrl = page.Url;
+            var pageTitle = await page.Locator(".page-title").TextContentAsync();
+            return pageUrl == forgotPasswordPageUrl && string.Equals(pageTitle.Replace(" ","").Trim(), 
+                "ForgotYourPassword?",StringComparison.OrdinalIgnoreCase);
         }
     }
 }
