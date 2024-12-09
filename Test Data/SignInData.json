@@ -1,6 +1,24 @@
 {
     "SignInWithValidCredentials": {
         "Email": "yadvirkaur@mailinator.com",
+        "Password": "Yadvir@001",
+        "FirstName": "Yadvir",
+        "LastName": "Kaur"
+    },
+    "SignInWithValidEmailInvalidPassword": {
+        "Email": "yadvirkaur@mailinator.com",
+        "Password": "Yadvir"
+    },
+    "SignInWithInvalidEmailValidPassword": {
+        "Email": "yadvirkaur",
+        "Password": "Yadvir@001"
+    },
+    "SignInWithEmptyFields": {
+        "Email": "",
+        "Password": ""
+    },
+    "SignInWithUngeristeredEmail": {
+        "Email": "yadvir@mailinator.com",
         "Password": "Yadvir@001"
     }
 }

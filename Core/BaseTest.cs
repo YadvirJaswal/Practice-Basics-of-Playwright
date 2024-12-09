@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using Practice_Basics_of_Playwright.Utilities;
 
 namespace Practice_Basics_of_Playwright.Core
 {
@@ -9,10 +10,12 @@ namespace Practice_Basics_of_Playwright.Core
         protected IPage page;
         
         protected AppSettings appSettings;
+        protected ExcelReader excelReader;
 
         public BaseTest()
         {
             appSettings = new TestConfiguration().GetSettings();
+            excelReader = new ExcelReader();
         }
 
         public async Task InitializeAsync()
