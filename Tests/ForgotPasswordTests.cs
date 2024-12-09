@@ -14,7 +14,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
-            var forgotPasswordPage = new ForgotPasswordPage(page);
+            var forgotPasswordPage = new ForgotPasswordPage(page, appSettings);
 
             // Act
             await signInPage.ClickOnForgotPasswordLinkAsync();

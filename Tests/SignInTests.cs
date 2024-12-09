@@ -279,12 +279,13 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
+            var forgotPasswordPage = new ForgotPasswordPage(page, appSettings);
 
             // Act
             await signInPage.ClickOnForgotPasswordLinkAsync();
 
             // Assert
-            var isNavigatedToForgotPasswordPage = await signInPage.IsNavigatedToForgotPasswordPageAsync();
+            var isNavigatedToForgotPasswordPage = await forgotPasswordPage.IsNavigatedToForgotPasswordPageAsync();
             Assert.True(isNavigatedToForgotPasswordPage, "User is not navigated to Forgot Password Page.");
         }
     }
