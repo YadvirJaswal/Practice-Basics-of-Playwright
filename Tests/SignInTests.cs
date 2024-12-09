@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Practice_Basics_of_Playwright.Core;
 using Practice_Basics_of_Playwright.Models;
 using Practice_Basics_of_Playwright.Pages;
+using Practice_Basics_of_Playwright.Utilities;
 
 namespace Practice_Basics_of_Playwright.Tests
 {
@@ -21,8 +22,11 @@ namespace Practice_Basics_of_Playwright.Tests
 
         private readonly List<TestCase> signInTestCasesList;
         private readonly List<TestCase> signUpTestCasesList;
+        
+       
         public SignInTests()
         {
+            // Read teat data from excel
             testCaseData = excelReader.ReadExcelFile("Test Data/ECT-TestCases.xlsx", [signupSheetName,signInSheetName]);
 
             signInTestCasesList = testCaseData[signInSheetName];
@@ -32,6 +36,9 @@ namespace Practice_Basics_of_Playwright.Tests
             {
                 throw new Exception("No test cases found");
             }
+
+            
+            
 
             // Load data from json
             var jsonContent_SignIn = File.ReadAllText("Test Data/SignInData.json");
@@ -63,7 +70,7 @@ namespace Practice_Basics_of_Playwright.Tests
                 // Assert
                 var isSignInSuccessfull = await signInPage.IsSignInSuccessfullAsync(testData);
                 Assert.True(isSignInSuccessfull, "User is not signed In");
-
+                
                 // if it reaches here it means the test cases has passes - update passed status in excel
             }
             catch (Exception ex)
@@ -78,19 +85,36 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
+
             var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
             Assert.NotNull(testCase);
             Assert.NotEmpty(testCase.TestData);
             var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
             Assert.NotNull(testData);
-            
+
+            // Update status in Excel to "In Progress"
+            var updater = new TestStatusUpdater();
+            string status = "In Progress";
+            updater.UpdateTestStatus("Test Data/ECT-TestCases.xlsx", signInSheetName, testCaseId, status);
+
             // Act
             await signInPage.SignInUserAsync(testData);
 
             // Assert
             var isErrorMessageShown = await signInPage.IsErrorShownAsync();
             Assert.True(isErrorMessageShown, "Error message is not shown");
+            if (isErrorMessageShown)
+            {
+                status = "Passed";
+            }
+            else
+            {
+                status = "Failed";
+            }
+            // Update test status in Excel after test execution
+            updater.UpdateTestStatus("Test Data/ECT-TestCases.xlsx", signInSheetName, testCaseId, status);
         }
+
         [Theory]
         [InlineData("TC-SIGNIN-003")]
         public async Task SignIn_InvalidEmailAndValidPassword_ErrorMessageShouldShown(string testCaseId)
