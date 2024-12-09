@@ -10,15 +10,18 @@ namespace Practice_Basics_of_Playwright.Pages
     public class ForgotPasswordPage
     {
         private readonly IPage page;
-        private ILocator signInNavigationButton;
-        private ILocator forgotPasswordLink;
+        private ILocator emailInput;
 
 
         public ForgotPasswordPage(IPage page)
         {
             this.page = page;
-            signInNavigationButton = page.Locator(".panel.header > ul > li:nth-child(2) > a");
-            forgotPasswordLink = page.Locator(".action.remind");
+            emailInput = page.Locator("#email_address");
+        }
+        public async Task<bool> IsEmailInputFieldVisibleAsync()
+        {
+            var isEmailInputfieldVisible = await emailInput.IsVisibleAsync();
+            return isEmailInputfieldVisible;
         }
     }
 }
