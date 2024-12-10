@@ -100,6 +100,10 @@ namespace Practice_Basics_of_Playwright.Pages
         }
         public async Task<bool> IsErrorShownAsync()
         {
+            await emailError.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible
+            });
             var isErrorShown = await emailError.IsVisibleAsync();
             return isErrorShown;
         }

@@ -93,5 +93,28 @@ namespace Practice_Basics_of_Playwright.Tests
             var isErrorShown = await fpPage.IsErrorShownAsync();
             Assert.True(isErrorShown, "Error is not shown for invalid email format");
         }
+        [Theory]
+        [InlineData("FP-004")]
+        public async Task ResetPassword_EmptyEmailField_ShouldBeReset(string testCaseId)
+        {
+            // Arrange test data
+            var testcase = testCaseList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testcase);
+            Assert.NotEmpty(testcase.TestData);
+            var testData = JsonConvert.DeserializeObject<FPTestData>(testcase.TestData);
+            Assert.NotNull(testData);
+
+            // Arrange page
+            var fpPage = new ForgotPasswordPage(page, appSettings);
+            var signInPage = new SignInPage(page, appSettings);
+
+            // Act
+            await signInPage.ClickOnForgotPasswordLinkAsync();
+            await fpPage.EnterEmailAndClickOnResetPasswordAsync(testData);
+
+            // Assert
+            var isErrorShown = await fpPage.IsErrorShownAsync();
+            Assert.True(isErrorShown, "Error is not shown for empty email address field");
+        }
     }
 }
