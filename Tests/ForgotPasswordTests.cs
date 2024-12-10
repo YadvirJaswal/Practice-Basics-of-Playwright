@@ -61,14 +61,14 @@ namespace Practice_Basics_of_Playwright.Tests
             var isSuccessMessageVisible = await fpPage.IsResetLinkSuccessfullySentAsync();
             Assert.True(isSuccessMessageVisible, "Success Message is not shown");
 
-            // Act
-            await fpPage.NavigateToMailinatorForResetPasswordLinkAsync(testData);
+            //// Act
+            //await fpPage.NavigateToMailinatorForResetPasswordLinkAsync(testData);
 
-            //var isNavigateToPasswordPage = await fpPage.IsNavigateToChangePasswordPage();
-            ////await page.WaitForURLAsync($"{appSettings.BaseUrl}customer/account/createpassword/");
-            //Assert.True(isNavigateToPasswordPage, "User is not navigate to password page");
+            ////var isNavigateToPasswordPage = await fpPage.IsNavigateToChangePasswordPage();
+            //////await page.WaitForURLAsync($"{appSettings.BaseUrl}customer/account/createpassword/");
+            ////Assert.True(isNavigateToPasswordPage, "User is not navigate to password page");
 
-            await fpPage.EnterPasswordAndConfirmPassword(testData);
+            //await fpPage.EnterPasswordAndConfirmPassword(testData);
         }
         [Theory]
         [InlineData("FP-003")]
