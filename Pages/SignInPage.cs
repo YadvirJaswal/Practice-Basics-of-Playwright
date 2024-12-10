@@ -150,6 +150,7 @@ namespace Practice_Basics_of_Playwright.Pages
         }
         public async Task<bool> IsNavigateToSignUpPageAsync()
         {
+            
             var actualUrl =   page.Url;
             var expectedUrl = "https://magento.softwaretestingboard.com/customer/account/create/";
             return actualUrl == expectedUrl;
