@@ -86,18 +86,8 @@ namespace Practice_Basics_of_Playwright.Pages
             //await page.WaitForRequestFinishedAsync();
             //await page.WaitForURLAsync("https://magento.softwaretestingboard.com/customer/account/createpassword/");
         }
-        //public async Task<bool> IsNavigateToChangePasswordPage()
-        //{
-           
-        //    var currentUrl = page.Url;
-        //    return currentUrl == passwordPageUrl;
-        //}
-        //public async Task EnterPasswordAndConfirmPassword(FPTestData fPTestData)
-        //{
-        //    await passwordInput.FillAsync(fPTestData.Password);
-        //    await confirmPasswordInput.FillAsync(fPTestData.ConfirmPassword);
-        //    await setNewPasswordButton.ClickAsync();
-        //}
+        
+        
         public async Task<bool> IsErrorShownAsync()
         {
             await emailError.WaitForAsync(new LocatorWaitForOptions
@@ -107,5 +97,6 @@ namespace Practice_Basics_of_Playwright.Pages
             var isErrorShown = await emailError.IsVisibleAsync();
             return isErrorShown;
         }
+        
     }
 }
