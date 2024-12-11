@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Practice_Basics_of_Playwright.Core;
 using Practice_Basics_of_Playwright.Models;
 using Practice_Basics_of_Playwright.Pages;
@@ -26,7 +21,7 @@ namespace Practice_Basics_of_Playwright.Tests
        
         public SignInTests()
         {
-            // Read teat data from excel
+            // Read test data from excel
             testCaseData = excelReader.ReadExcelFile("Test Data/ECT-TestCases.xlsx", [signupSheetName,signInSheetName]);
 
             signInTestCasesList = testCaseData[signInSheetName];
@@ -279,12 +274,13 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
+            var forgotPasswordPage = new ForgotPasswordPage(page, appSettings);
 
             // Act
             await signInPage.ClickOnForgotPasswordLinkAsync();
 
             // Assert
-            var isNavigatedToForgotPasswordPage = await signInPage.IsNavigatedToForgotPasswordPageAsync();
+            var isNavigatedToForgotPasswordPage = await forgotPasswordPage.IsNavigatedToForgotPasswordPageAsync();
             Assert.True(isNavigatedToForgotPasswordPage, "User is not navigated to Forgot Password Page.");
         }
     }

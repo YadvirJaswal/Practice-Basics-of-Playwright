@@ -15,7 +15,7 @@ namespace Practice_Basics_of_Playwright.Pages
     {
         private readonly IPage page;
         private readonly string homePageUrl;
-        private readonly string forgotPasswordPageUrl;
+        
 
         public ILocator signInNavigationButton;
         private ILocator emailInput;
@@ -31,7 +31,7 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             this.page = page;
             homePageUrl = appSettings.BaseUrl;
-            forgotPasswordPageUrl = $"{appSettings.BaseUrl}customer/account/forgotpassword/";
+            
 
             signInNavigationButton = page.Locator(".panel.header > ul > li:nth-child(2) > a");
             emailInput = page.Locator("#email");
@@ -150,16 +150,11 @@ namespace Practice_Basics_of_Playwright.Pages
         }
         public async Task<bool> IsNavigateToSignUpPageAsync()
         {
+            
             var actualUrl =   page.Url;
             var expectedUrl = "https://magento.softwaretestingboard.com/customer/account/create/";
             return actualUrl == expectedUrl;
         }
-        public async Task<bool> IsNavigatedToForgotPasswordPageAsync()
-        {
-            var pageUrl = page.Url;
-            var pageTitle = await page.Locator(".page-title").TextContentAsync();
-            return pageUrl == forgotPasswordPageUrl && string.Equals(pageTitle.Replace(" ","").Trim(), 
-                "ForgotYourPassword?",StringComparison.OrdinalIgnoreCase);
-        }
+        
     }
 }
