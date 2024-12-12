@@ -21,6 +21,7 @@ namespace Practice_Basics_of_Playwright.Tests
 
             // Assert
             await Assertions.Expect(page).ToHaveURLAsync(appSettings.BaseUrl);
+            await Assertions.Expect(page).ToHaveTitleAsync("Home Page");
         }
     }
 }
