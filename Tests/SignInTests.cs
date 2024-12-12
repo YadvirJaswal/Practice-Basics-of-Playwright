@@ -56,11 +56,7 @@ namespace Practice_Basics_of_Playwright.Tests
             {
                 // update in progress status in Excel
                 // Arrange
-                var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-                Assert.NotNull(testCase);
-                Assert.NotEmpty(testCase.TestData);
-                var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-                Assert.NotNull(testData);
+                var testData = GetTestData(testCaseId);
 
                 var signInPage = new SignInPage(page, appSettings);
 
@@ -70,7 +66,7 @@ namespace Practice_Basics_of_Playwright.Tests
                 // Assert
                 var isSignInSuccessfull = await signInPage.IsSignInSuccessfullAsync(testData);
                 Assert.True(isSignInSuccessfull, "User is not signed In");
-                
+
                 // if it reaches here it means the test cases has passes - update passed status in excel
             }
             catch (Exception ex)
@@ -79,6 +75,17 @@ namespace Practice_Basics_of_Playwright.Tests
                 // create a bug in Github issues
             }
         }
+
+        private SignInUser GetTestData(string testCaseId)
+        {
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
+            return testData;
+        }
+
         [Theory]
         [InlineData("TC-SIGNIN-002")]
         public async Task SignIn_ValidEmailAndInvalidPassword_ErrorMessageShouldShown(string testCaseId)
@@ -86,11 +93,7 @@ namespace Practice_Basics_of_Playwright.Tests
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
 
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var testData = GetTestData(testCaseId);
 
             // Update status in Excel to "In Progress"
             var updater = new TestStatusUpdater();
@@ -121,11 +124,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var testData = GetTestData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -140,11 +139,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var testData = GetTestData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -159,11 +154,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var testData = GetTestData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -178,11 +169,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange 
             var signInPage = new SignInPage(page, appSettings);
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var testData = GetTestData(testCaseId);
 
             //Act
             await signInPage.EnterPasswordAsync(testData);
@@ -242,14 +229,10 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var testData = GetTestData(testCaseId);
 
             // Act
-           await signInPage.SignInUserAsync(testData);
+            await signInPage.SignInUserAsync(testData);
 
             //Assert
             var isSignInSuccessful = await signInPage.IsSignInSuccessfullAsync(testData);
@@ -260,12 +243,8 @@ namespace Practice_Basics_of_Playwright.Tests
         public async Task Password_VerifyCaseSenstivity_SignInShouldFail(string testCaseId)
         {
             //Arrange
-            var signInPage = new SignInPage(page, appSettings); 
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
+            var signInPage = new SignInPage(page, appSettings);
+            var testData = GetTestData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -286,6 +265,21 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert
             var isNavigatedToForgotPasswordPage = await signInPage.IsNavigatedToForgotPasswordPageAsync();
             Assert.True(isNavigatedToForgotPasswordPage, "User is not navigated to Forgot Password Page.");
+        }
+        [Theory]
+        [InlineData("TC-SIGNIN-012")]
+        public async Task ResetPassword_SignInWithNewPassword_ShouldSucceed( string testCaseId)
+        {
+            // Arrange 
+            var testData = GetTestData(testCaseId);
+            var signinPage = new SignInPage(page, appSettings);
+
+            // Act
+            await signinPage.SignInUserAsync(testData);
+
+            // Assert
+            var isSignInSuccessfull = await signinPage.IsSignInSuccessfullAsync(testData);
+            Assert.True(isSignInSuccessfull, "User is not signed In");
         }
     }
 }
