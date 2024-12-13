@@ -8,12 +8,14 @@ namespace Practice_Basics_of_Playwright.Pages
         public readonly ILocator logo;
         public readonly ILocator searchField;
         public readonly ILocator cartIcon;
+        public readonly ILocator bannerImage;
         public HomePage(IPage page)
         {
             this.page = page;
             logo = page.GetByLabel("store logo");
             searchField = page.Locator("#search");
             cartIcon = page.Locator(".showcart");
+            bannerImage = page.Locator(".home-main>img");
         }
         public async Task ClickOnLogoAsync()
         {
@@ -24,7 +26,9 @@ namespace Practice_Basics_of_Playwright.Pages
             var searchFieldType = await searchField.GetAttributeAsync("type");
             return searchFieldType == "text";
         }
-       
-        
+       public async Task ClickOnBannerImageAsync()
+        {
+            await bannerImage.ClickAsync();
+        }        
     }
 }

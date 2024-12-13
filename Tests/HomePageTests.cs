@@ -47,6 +47,22 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(homePage.cartIcon).ToBeVisibleAsync();
             await Assertions.Expect(homePage.cartIcon).ToBeEnabledAsync();
         }
+        [Fact]
+        public async Task BannerImage_ClickOnBanner_ShouldBeNavigatedToYogaCollectionPage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Assert that the banner is visible and clickable
+            await Assertions.Expect(homePage.bannerImage).ToBeVisibleAsync();
+            await Assertions.Expect(homePage.bannerImage).ToBeEnabledAsync();
+
+            // Act - Click on banner image
+            await homePage.ClickOnBannerImageAsync();
+
+            // Assert the navigation of banner image
+            await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}collections/yoga-new.html");
+        }
 
 
 
