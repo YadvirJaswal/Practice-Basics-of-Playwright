@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Practice_Basics_of_Playwright.Core;
 using Practice_Basics_of_Playwright.Models;
 using Practice_Basics_of_Playwright.Pages;
@@ -26,7 +21,7 @@ namespace Practice_Basics_of_Playwright.Tests
        
         public SignInTests()
         {
-            // Read teat data from excel
+            // Read test data from excel
             testCaseData = excelReader.ReadExcelFile("Test Data/ECT-TestCases.xlsx", [signupSheetName,signInSheetName]);
 
             signInTestCasesList = testCaseData[signInSheetName];
@@ -47,7 +42,15 @@ namespace Practice_Basics_of_Playwright.Tests
             var jsonContent_SignUp = File.ReadAllText("Test Data/SignupData.json");
             testData_SignUp = JsonConvert.DeserializeObject<SignUpTestData>(jsonContent_SignUp) ?? new SignUpTestData();
         }
-
+        private SignInUser GetTestCaseData(string testCaseId)
+        {
+            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
+            return testData;
+        }
         [Theory]
         [InlineData("TC-SIGNIN-001")]
         public async Task SignIn_ValidCredentials_ShouldSucceed(string testCaseId)
@@ -92,8 +95,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             // Update status in Excel to "In Progress"
             var updater = new TestStatusUpdater();
@@ -118,13 +120,14 @@ namespace Practice_Basics_of_Playwright.Tests
             updater.UpdateTestStatus("Test Data/ECT-TestCases.xlsx", signInSheetName, testCaseId, status);
         }
 
+       
         [Theory]
         [InlineData("TC-SIGNIN-003")]
         public async Task SignIn_InvalidEmailAndValidPassword_ErrorMessageShouldShown(string testCaseId)
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -139,7 +142,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -258,12 +261,13 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
+            var forgotPasswordPage = new ForgotPasswordPage(page, appSettings);
 
             // Act
             await signInPage.ClickOnForgotPasswordLinkAsync();
 
             // Assert
-            var isNavigatedToForgotPasswordPage = await signInPage.IsNavigatedToForgotPasswordPageAsync();
+            var isNavigatedToForgotPasswordPage = await forgotPasswordPage.IsNavigatedToForgotPasswordPageAsync();
             Assert.True(isNavigatedToForgotPasswordPage, "User is not navigated to Forgot Password Page.");
         }
         [Theory]
