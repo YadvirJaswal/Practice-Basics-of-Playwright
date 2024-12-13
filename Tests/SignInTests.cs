@@ -59,7 +59,7 @@ namespace Practice_Basics_of_Playwright.Tests
             {
                 // update in progress status in Excel
                 // Arrange
-                var testData = GetTestData(testCaseId);
+                var testData = GetTestCaseData(testCaseId);
 
                 var signInPage = new SignInPage(page, appSettings);
 
@@ -77,16 +77,6 @@ namespace Practice_Basics_of_Playwright.Tests
                 // testcase failed - update failed status in excel
                 // create a bug in Github issues
             }
-        }
-
-        private SignInUser GetTestData(string testCaseId)
-        {
-            var testCase = signInTestCasesList.Find(l => l.TestCaseId == testCaseId);
-            Assert.NotNull(testCase);
-            Assert.NotEmpty(testCase.TestData);
-            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
-            Assert.NotNull(testData);
-            return testData;
         }
 
         [Theory]
@@ -136,6 +126,7 @@ namespace Practice_Basics_of_Playwright.Tests
             var isErrorShown = await signInPage.IsErrorShownForInvalidEmailAsync();
             Assert.True(isErrorShown, "Error message is not shown");
         }
+
         [Theory]
         [InlineData("TC-SIGNIN-004")]
         public async Task RequiredFields_AreEmpty_ShouldShowErrorMessages(string testCaseId)
@@ -157,7 +148,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -172,7 +163,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange 
             var signInPage = new SignInPage(page, appSettings);
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             //Act
             await signInPage.EnterPasswordAsync(testData);
@@ -232,7 +223,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             // Arrange
             var signInPage = new SignInPage(page,appSettings);
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -247,7 +238,7 @@ namespace Practice_Basics_of_Playwright.Tests
         {
             //Arrange
             var signInPage = new SignInPage(page, appSettings);
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
 
             // Act
             await signInPage.SignInUserAsync(testData);
@@ -275,7 +266,7 @@ namespace Practice_Basics_of_Playwright.Tests
         public async Task ResetPassword_SignInWithNewPassword_ShouldSucceed( string testCaseId)
         {
             // Arrange 
-            var testData = GetTestData(testCaseId);
+            var testData = GetTestCaseData(testCaseId);
             var signinPage = new SignInPage(page, appSettings);
 
             // Act
