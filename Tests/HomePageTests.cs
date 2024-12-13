@@ -37,6 +37,16 @@ namespace Practice_Basics_of_Playwright.Tests
             var isSearchFieldInputElement = await homePage.IsSearchFieldInputElementAsync();
             Assert.True(isSearchFieldInputElement);
         }
+        [Fact]
+        public async Task CartButtonShouldBeVisibleAndClickable()
+        {
+            // arrange
+            var homePage = new HomePage(page);
+
+            // Assert
+            await Assertions.Expect(homePage.cartIcon).ToBeVisibleAsync();
+            await Assertions.Expect(homePage.cartIcon).ToBeEnabledAsync();
+        }
 
 
 

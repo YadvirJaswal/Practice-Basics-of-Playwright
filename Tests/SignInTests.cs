@@ -279,5 +279,6 @@ namespace Practice_Basics_of_Playwright.Tests
             var isNavigatedToForgotPasswordPage = await forgotPasswordPage.IsNavigatedToForgotPasswordPageAsync();
             Assert.True(isNavigatedToForgotPasswordPage, "User is not navigated to Forgot Password Page.");
         }
+        
     }
 }
