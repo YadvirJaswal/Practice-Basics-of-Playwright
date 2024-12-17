@@ -63,6 +63,16 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert the navigation of banner image
             await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}collections/yoga-new.html");
         }
+        [Fact]
+        public async Task HotSellerImages_ClickOnImage_ShouldBeNavigatedToProductPage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            
+            // Act and Assert
+            var hasTitleMatched = await homePage.HasNavigatedToCorrectPage();
+            Assert.True(hasTitleMatched);
+        }
 
 
 
