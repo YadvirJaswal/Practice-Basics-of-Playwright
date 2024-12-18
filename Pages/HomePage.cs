@@ -16,6 +16,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator sizeOption;
         private readonly ILocator colorOption;
         private readonly ILocator successMessage;
+        public readonly ILocator addToCompareIcon;
         public HomePage(IPage page)
         {
             this.page = page;
@@ -30,6 +31,7 @@ namespace Practice_Basics_of_Playwright.Pages
             sizeOption = imageLists.Filter(new() { HasText = "Radiant Tee" }).Locator("#option-label-size-143-item-167");
             colorOption = imageLists.Filter(new() { HasText = "Radiant Tee" }).Locator("#option-label-color-93-item-50");
             successMessage = page.GetByRole(AriaRole.Alert).First;
+            addToCompareIcon = imageLists.Filter(new() { HasText = "Radiant Tee" }).GetByRole(AriaRole.Link, new() { Name = "Add to Compare" });
         }
         public async Task ClickOnLogoAsync()
         {
@@ -63,6 +65,10 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             var cartLink = successMessage.Locator("a");
             await cartLink.ClickAsync();
+        }
+        public async Task ClickOnAddToCompareIconAsync()
+        {
+            await addToCompareIcon.ClickAsync();
         }
         public async Task<bool> IsSearchFieldInputElementAsync()
         {

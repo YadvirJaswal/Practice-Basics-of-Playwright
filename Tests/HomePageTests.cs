@@ -158,5 +158,18 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}radiant-tee.html");
             await Assertions.Expect(productPage.errorMessage).ToBeVisibleAsync();
         }
+
+        [Fact]
+        public async Task HoSellerImages_Hover_ShouldDisplayAddToCompareIcon()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Act
+            await homePage.HoverOnImageAsync();
+
+            // Assert
+            await Assertions.Expect(homePage.addToCompareIcon).ToBeVisibleAsync();
+        }
     }
 }
