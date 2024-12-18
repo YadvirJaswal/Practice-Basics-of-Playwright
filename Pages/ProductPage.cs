@@ -11,11 +11,13 @@ namespace Practice_Basics_of_Playwright.Pages
     {
         private readonly IPage page;
         private readonly ILocator title;
+        public readonly ILocator errorMessage;
 
         public ProductPage(IPage page)
         {
             this.page = page;
             title = page.Locator(".base");
+            errorMessage = page.GetByRole(AriaRole.Alert).First;
         }
         public async Task<string> GetTitleAfterClicking()
         {

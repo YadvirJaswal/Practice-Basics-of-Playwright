@@ -124,5 +124,22 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert the navigation after clicking on link
             await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}checkout/cart/");
         }
+
+        [Fact]
+        public async Task HotSellerImages_Hover_SelectSize_ClickAddToCart_ShouldNavigateAndPrompt()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.HoverOnImageAsync();
+            await homePage.SelectSizeAsync();
+            await homePage.ClickOnAddToCartButtonAsync();
+
+            // Assert
+            await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}radiant-tee.html");
+            await Assertions.Expect(productPage.errorMessage).ToBeVisibleAsync();
+        }
     }
 }
