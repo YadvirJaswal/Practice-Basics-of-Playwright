@@ -44,8 +44,8 @@ namespace Practice_Basics_of_Playwright.Tests
             var homePage = new HomePage(page);
 
             // Assert
-            await Assertions.Expect(homePage.cartIcon).ToBeVisibleAsync();
-            await Assertions.Expect(homePage.cartIcon).ToBeEnabledAsync();
+            await Assertions.Expect(homePage.cartIconInHeader).ToBeVisibleAsync();
+            await Assertions.Expect(homePage.cartIconInHeader).ToBeEnabledAsync();
         }
         [Fact]
         public async Task BannerImage_ClickOnBanner_ShouldBeNavigatedToYogaCollectionPage()
@@ -74,7 +74,33 @@ namespace Practice_Basics_of_Playwright.Tests
             Assert.True(hasTitleMatched);
         }
 
+        [Fact]
+        public async Task HotSellerImage_Hover_ShouldDisplayAddToCartButton()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
 
+            // Act
+            await homePage.HoverOnImageAsync();
+
+            // Assert
+            await Assertions.Expect(homePage.addToCartButton).ToBeVisibleAsync();
+        }
+
+        [Fact]
+        public async Task HotSellerImages_Hover_ClickAddToCart_ShouldNavigateAndPrompt()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Act
+            await homePage.HoverOnImageAsync();
+            await homePage.ClickOnAddToCartButtonAsync();
+
+            // Assert
+            await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}radiant-tee.html");
+            await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
+        }
 
     }
 }

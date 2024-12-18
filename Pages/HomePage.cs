@@ -8,9 +8,10 @@ namespace Practice_Basics_of_Playwright.Pages
         private ProductPage productPage;
         public readonly ILocator logo;
         public readonly ILocator searchField;
-        public readonly ILocator cartIcon;
+        public readonly ILocator cartIconInHeader;
         public readonly ILocator bannerImage;
         private readonly ILocator hotSellerImage;
+        public readonly ILocator addToCartButton;
         
         public HomePage(IPage page)
         {
@@ -18,27 +19,36 @@ namespace Practice_Basics_of_Playwright.Pages
             productPage = new ProductPage(page);
             logo = page.GetByLabel("store logo");
             searchField = page.Locator("#search");
-            cartIcon = page.Locator(".showcart");
+            cartIconInHeader = page.Locator(".showcart");
             bannerImage = page.Locator(".home-main>img");
             hotSellerImage = page.GetByAltText("Radiant Tee");
+            addToCartButton = page.GetByRole(AriaRole.Button, new() { Name = "Add to Cart" }).First;
             
         }
         public async Task ClickOnLogoAsync()
         {
             await logo.ClickAsync();
         }
+        public async Task ClickOnBannerImageAsync()
+        {
+            await bannerImage.ClickAsync();
+        }
+        public async Task ClickOnFirstImageAsync()
+        {
+            await hotSellerImage.ClickAsync();
+        }
+        public async Task HoverOnImageAsync()
+        {
+            await page.HoverAsync("//img[@alt='Radiant Tee']");
+        }
+        public async Task ClickOnAddToCartButtonAsync()
+        {
+            await addToCartButton.ClickAsync();
+        }
         public async Task<bool> IsSearchFieldInputElementAsync()
         {
             var searchFieldType = await searchField.GetAttributeAsync("type");
             return searchFieldType == "text";
-        }
-       public async Task ClickOnBannerImageAsync()
-       {
-            await bannerImage.ClickAsync();
-       } 
-        public async Task ClickOnFirstImageAsync()
-        {
-            await hotSellerImage.ClickAsync();
         }
         public async Task<bool> HasNavigatedToCorrectPage()
         {
