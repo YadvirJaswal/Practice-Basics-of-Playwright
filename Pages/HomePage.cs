@@ -12,7 +12,10 @@ namespace Practice_Basics_of_Playwright.Pages
         public readonly ILocator bannerImage;
         private readonly ILocator hotSellerImage;
         public readonly ILocator addToCartButton;
-        
+        private readonly ILocator imageLists;
+        private readonly ILocator sizeOption;
+        private readonly ILocator colorOption;
+        private readonly ILocator successMessage;
         public HomePage(IPage page)
         {
             this.page = page;
@@ -22,8 +25,11 @@ namespace Practice_Basics_of_Playwright.Pages
             cartIconInHeader = page.Locator(".showcart");
             bannerImage = page.Locator(".home-main>img");
             hotSellerImage = page.GetByAltText("Radiant Tee");
-            addToCartButton = page.GetByRole(AriaRole.Button, new() { Name = "Add to Cart" }).First;
-            
+            imageLists = page.Locator(".product-items>li");
+            addToCartButton = imageLists.Filter(new() { HasText = "Radiant Tee"}).GetByRole(AriaRole.Button, new() { Name = "Add to Cart" });
+            sizeOption = imageLists.Filter(new() { HasText = "Radiant Tee" }).Locator("#option-label-size-143-item-167");
+            colorOption = imageLists.Filter(new() { HasText = "Radiant Tee" }).Locator("#option-label-color-93-item-50");
+            successMessage = page.GetByRole(AriaRole.Alert).First;
         }
         public async Task ClickOnLogoAsync()
         {
@@ -44,6 +50,19 @@ namespace Practice_Basics_of_Playwright.Pages
         public async Task ClickOnAddToCartButtonAsync()
         {
             await addToCartButton.ClickAsync();
+        }
+        public async Task SelectSizeAsync()
+        {
+            await sizeOption.ClickAsync();
+        }
+        public async Task SelectColorAsync()
+        {
+            await colorOption.ClickAsync();
+        }
+        public async Task ClickOnShoppingCartLinkAsync()
+        {
+            var cartLink = successMessage.Locator("a");
+            await cartLink.ClickAsync();
         }
         public async Task<bool> IsSearchFieldInputElementAsync()
         {
@@ -71,6 +90,17 @@ namespace Practice_Basics_of_Playwright.Pages
                 
             }
             return hasNavigateToCorrectPage;   
+        }
+        public async Task<bool> IsSuccessMessageShownAsync()
+        {
+            await successMessage.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible
+            });
+            var isMessageShown = await successMessage.IsVisibleAsync();
+            var hasLink = await successMessage.Locator("a").IsVisibleAsync();
+             
+            return isMessageShown && hasLink;
         }
     }
 }

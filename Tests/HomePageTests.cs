@@ -102,5 +102,27 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
         }
 
+        [Fact]
+        public async Task HotSellerImages_Hover_SelectOptions_ClickAddToCart_ShouldNavigateAndPrompt()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Act 
+            await homePage.HoverOnImageAsync();
+            await homePage.SelectSizeAsync();
+            await homePage.SelectColorAsync();
+            await homePage.ClickOnAddToCartButtonAsync();
+
+            // Assert the visibility of success message on the page and the visibility of shopping cart link in message
+            var isMessageShown = await homePage.IsSuccessMessageShownAsync();
+            Assert.True(isMessageShown);
+
+            // Click on the shopping cart link shown in the success message
+            await homePage.ClickOnShoppingCartLinkAsync();
+
+            // Assert the navigation after clicking on link
+            await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}checkout/cart/");
+        }
     }
 }
