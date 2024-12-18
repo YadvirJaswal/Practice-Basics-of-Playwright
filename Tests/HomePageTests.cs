@@ -119,7 +119,7 @@ namespace Practice_Basics_of_Playwright.Tests
             Assert.True(isMessageShown);
 
             // Click on the shopping cart link shown in the success message
-            await homePage.ClickOnShoppingCartLinkAsync();
+            await homePage.ClickOnLinkInPromptAsync();
 
             // Assert the navigation after clicking on link
             await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}checkout/cart/");
@@ -160,7 +160,7 @@ namespace Practice_Basics_of_Playwright.Tests
         }
 
         [Fact]
-        public async Task HoSellerImages_Hover_ShouldDisplayAddToCompareIcon()
+        public async Task HotSellerImages_Hover_ShouldDisplayAddToCompareIcon()
         {
             // Arrange
             var homePage = new HomePage(page);
@@ -170,6 +170,27 @@ namespace Practice_Basics_of_Playwright.Tests
 
             // Assert
             await Assertions.Expect(homePage.addToCompareIcon).ToBeVisibleAsync();
+        }
+
+        [Fact]
+        public async Task HotSellerImages_Hover_ClickAddToCompareIcon_ShouldNavigateAndPrompt()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Act
+            await homePage.HoverOnImageAsync();
+            await homePage.ClickOnAddToCompareIconAsync();
+
+            // Assert the visibility of success message on the page and the visibility of comparison list link in message
+            var isMessageShown = await homePage.IsSuccessMessageShownAsync();
+            Assert.True(isMessageShown);
+
+            // Click on the shopping cart link shown in the success message
+            await homePage.ClickOnLinkInPromptAsync();
+
+            // Assert the navigation after clicking on link
+            await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}catalog/product_compare/");
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             await colorOption.ClickAsync();
         }
-        public async Task ClickOnShoppingCartLinkAsync()
+        public async Task ClickOnLinkInPromptAsync()
         {
             var cartLink = successMessage.Locator("a");
             await cartLink.ClickAsync();
