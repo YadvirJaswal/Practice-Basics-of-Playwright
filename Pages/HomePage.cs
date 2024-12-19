@@ -17,6 +17,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator colorOption;
         private readonly ILocator successMessage;
         public readonly ILocator addToCompareIcon;
+        public readonly ILocator addToWishListIcon;
         public HomePage(IPage page)
         {
             this.page = page;
@@ -32,6 +33,7 @@ namespace Practice_Basics_of_Playwright.Pages
             colorOption = imageLists.Filter(new() { HasText = "Radiant Tee" }).Locator("#option-label-color-93-item-50");
             successMessage = page.GetByRole(AriaRole.Alert).First;
             addToCompareIcon = imageLists.Filter(new() { HasText = "Radiant Tee" }).GetByRole(AriaRole.Link, new() { Name = "Add to Compare" });
+            addToWishListIcon = imageLists.Filter(new() { HasText = "Radiant Tee" }).GetByRole(AriaRole.Link, new() { Name = "Add to Wish List" });
         }
         public async Task ClickOnLogoAsync()
         {
@@ -69,6 +71,10 @@ namespace Practice_Basics_of_Playwright.Pages
         public async Task ClickOnAddToCompareIconAsync()
         {
             await addToCompareIcon.ClickAsync();
+        }
+        public async Task ClickOnAddToWishListIcon()
+        {
+            await addToWishListIcon.ClickAsync();
         }
         public async Task<bool> IsSearchFieldInputElementAsync()
         {

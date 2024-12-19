@@ -192,5 +192,33 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert the navigation after clicking on link
             await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}catalog/product_compare/");
         }
+
+        [Fact]
+        public async Task HotSellerImages_Hover_ShouldDisplayAddToWishListIcon()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Act
+            await homePage.HoverOnImageAsync();
+
+            //Assert
+            await Assertions.Expect(homePage.addToWishListIcon).ToBeVisibleAsync();
+        }
+
+        [Fact]
+        public async Task HotSellerImages_Hover_WithoutLoggingIn_ClickAddToWishList_ShouldNavigateAndPrompt()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // Act
+            await homePage.HoverOnImageAsync();
+            await homePage.ClickOnAddToWishListIcon();
+
+            // Assert
+            await Assertions.Expect(page).ToHaveTitleAsync("Customer Login");
+            await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
+        }
     }
 }
