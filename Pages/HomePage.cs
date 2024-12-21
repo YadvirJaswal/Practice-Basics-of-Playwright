@@ -15,7 +15,7 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator imageLists;
         private readonly ILocator sizeOption;
         private readonly ILocator colorOption;
-        private readonly ILocator successMessage;
+        public readonly ILocator successMessage;
         public readonly ILocator addToCompareIcon;
         public readonly ILocator addToWishListIcon;
         public HomePage(IPage page)

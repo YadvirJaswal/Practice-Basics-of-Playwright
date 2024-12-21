@@ -1,11 +1,27 @@
 ﻿using Microsoft.Playwright;
+using Newtonsoft.Json;
 using Practice_Basics_of_Playwright.Core;
+using Practice_Basics_of_Playwright.Models;
 using Practice_Basics_of_Playwright.Pages;
 
 namespace Practice_Basics_of_Playwright.Tests
 {
     public class HomePageTests : BaseTest
     {
+        private readonly SignInTestData testData;
+        private readonly Dictionary<string, List<TestCase>> testCaseData;
+        private const string homePageSheetName = "HomePage_Tests ";
+        private readonly List<TestCase> homePageTestCasesList;
+        public HomePageTests()
+        {
+            // Read Data from excel
+            testCaseData = excelReader.ReadExcelFile("Test Data/ECT-TestCases.xlsx", [homePageSheetName]);
+            homePageTestCasesList = testCaseData[homePageSheetName];
+            if (homePageTestCasesList.Count == 0)
+            {
+                throw new Exception("No test cases found");
+            }
+        }
         [Fact]
         public async Task LogoShouldBeVisisbleAndClickable()
         {
@@ -219,6 +235,44 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert
             await Assertions.Expect(page).ToHaveTitleAsync("Customer Login");
             await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
+        }
+
+        [Theory]
+        [InlineData("HP-015")]
+        public async Task HotSellerImages_Hover_LogIn_ClickAddToWishList_ShouldNavigateAndPrompt(string testCaseId)
+        {
+            // Arrange
+            var testCase = homePageTestCasesList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
+
+            var homePage = new HomePage(page);
+            var signInPage = new SignInPage(page,appSettings);
+
+            // Act
+            // 1. Log in to the application with valid credentials.
+            await signInPage.SignInUserAsync(testData);
+
+            // 2. Navigate to the home page.
+            await homePage.ClickOnLogoAsync();
+
+            // 3. Hover over a product image in the Hot Sellers section.
+            await homePage.HoverOnImageAsync();
+
+            // 4. Verify the "Add to Wishlist" icon is visible.
+            await Assertions.Expect(homePage.addToWishListIcon).ToBeVisibleAsync();
+
+            // 5. Click on the "Add to Wishlist" icon.
+            await homePage.ClickOnAddToWishListIcon();
+
+            // Assert
+            // 6. Verify that the user is navigated to the wishlist page.
+            await Assertions.Expect(page).ToHaveTitleAsync("My Wish List");
+
+            // 7. Verify that a success message is displayed confirming the item was added to the wishlist.
+            await Assertions.Expect(homePage.successMessage).ToBeVisibleAsync();
         }
     }
 }
