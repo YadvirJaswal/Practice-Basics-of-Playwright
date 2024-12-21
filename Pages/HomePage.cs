@@ -18,6 +18,9 @@ namespace Practice_Basics_of_Playwright.Pages
         public readonly ILocator successMessage;
         public readonly ILocator addToCompareIcon;
         public readonly ILocator addToWishListIcon;
+        private readonly ILocator productReviews;
+        public readonly ILocator ratingSummary;
+        public readonly ILocator reviews;
         public HomePage(IPage page)
         {
             this.page = page;
@@ -34,6 +37,10 @@ namespace Practice_Basics_of_Playwright.Pages
             successMessage = page.GetByRole(AriaRole.Alert).First;
             addToCompareIcon = imageLists.Filter(new() { HasText = "Radiant Tee" }).GetByRole(AriaRole.Link, new() { Name = "Add to Compare" });
             addToWishListIcon = imageLists.Filter(new() { HasText = "Radiant Tee" }).GetByRole(AriaRole.Link, new() { Name = "Add to Wish List" });
+            productReviews = imageLists.Filter(new() { HasText = "Radiant Tee" }).Locator(".product-reviews-summary");
+            ratingSummary = productReviews.Locator(".rating-summary");
+            reviews = productReviews.Locator(".reviews-actions").Locator("a");
+
         }
         public async Task ClickOnLogoAsync()
         {

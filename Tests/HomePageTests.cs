@@ -274,5 +274,22 @@ namespace Practice_Basics_of_Playwright.Tests
             // 7. Verify that a success message is displayed confirming the item was added to the wishlist.
             await Assertions.Expect(homePage.successMessage).ToBeVisibleAsync();
         }
+
+        [Fact]
+        public async Task HotSellerImages_ReviewsAndRatings_ShouldVisibleAndNavigate()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+
+            // star ratings and reviews are visible below the product image.
+            await Assertions.Expect(homePage.ratingSummary).ToBeVisibleAsync();
+            await Assertions.Expect(homePage.reviews).ToBeVisibleAsync();
+
+            // Act (Click on the reviews link)
+            await homePage.reviews.ClickAsync();
+
+            // Assert Navigation
+            await Assertions.Expect(page).ToHaveURLAsync($"{appSettings.BaseUrl}radiant-tee.html#reviews");
+        }
     }
 }
