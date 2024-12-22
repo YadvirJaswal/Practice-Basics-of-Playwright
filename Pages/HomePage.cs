@@ -105,6 +105,11 @@ namespace Practice_Basics_of_Playwright.Pages
                 {
                     hasNavigateToCorrectPage = true;
                 }
+                else
+                {
+                    hasNavigateToCorrectPage = false;
+                    break;
+                }
                 await page.GoBackAsync();
                 
             }
