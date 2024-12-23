@@ -17,6 +17,7 @@ namespace Practice_Basics_of_Playwright.Pages
         public readonly ILocator colorOption;
         public readonly ILocator quantityField;
         public readonly ILocator successMessage;
+        public readonly ILocator errorMessageForSizeOption;
 
         public ProductPage(IPage page)
         {
@@ -28,6 +29,7 @@ namespace Practice_Basics_of_Playwright.Pages
             colorOption = page.Locator(".swatch-attribute.color");
             quantityField = page.Locator("#qty");
             successMessage = page.GetByRole(AriaRole.Alert).First;
+            errorMessageForSizeOption = page.Locator("#super_attribute\\[143\\]-error");
         }
         public async Task<string> GetTitleAfterClicking()
         {

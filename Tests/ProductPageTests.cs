@@ -64,5 +64,21 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert success message
             await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
         }
+        [Fact]
+        public async Task Verify_AddToCart_NotSelectSizeOption_ShouldDisplayErrorMessage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await productPage.SelectColorOptionAsync();
+            await productPage.ClickAddToCartButtonAsync();
+
+            // Assert error message
+            await Assertions.Expect(productPage.errorMessageForSizeOption).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.errorMessageForSizeOption).ToContainTextAsync("This is a required field.");
+        }
     }
 }
