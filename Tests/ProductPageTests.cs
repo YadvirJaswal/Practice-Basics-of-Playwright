@@ -48,5 +48,21 @@ namespace Practice_Basics_of_Playwright.Tests
             var isInputField = await productPage.VerifyTypeOfQuantityFieldAsync();
             Assert.True(isInputField, "Quantity field is not a input element");
         }
+        [Fact]
+        public async Task Verify_AddToCart_WithOptions_ShouldDisplaySuccessMessage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act 
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await productPage.SelectSizeOptionAsync();
+            await productPage.SelectColorOptionAsync();
+            await productPage.ClickAddToCartButtonAsync();
+
+            // Assert success message
+            await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
+        }
     }
 }

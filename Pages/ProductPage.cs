@@ -16,6 +16,7 @@ namespace Practice_Basics_of_Playwright.Pages
         public readonly ILocator sizeOption;
         public readonly ILocator colorOption;
         public readonly ILocator quantityField;
+        public readonly ILocator successMessage;
 
         public ProductPage(IPage page)
         {
@@ -26,6 +27,7 @@ namespace Practice_Basics_of_Playwright.Pages
             sizeOption = page.Locator(".swatch-attribute.size");
             colorOption = page.Locator(".swatch-attribute.color");
             quantityField = page.Locator("#qty");
+            successMessage = page.GetByRole(AriaRole.Alert).First;
         }
         public async Task<string> GetTitleAfterClicking()
         {
@@ -36,6 +38,20 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             var type = await quantityField.GetAttributeAsync("type");
             return type == "number";
+        }
+        public async Task SelectColorOptionAsync()
+        {
+            // Select white color
+            await colorOption.Locator("#option-label-color-93-item-59").ClickAsync();
+        }
+        public async Task SelectSizeOptionAsync()
+        {
+            // Select small(S) size
+            await sizeOption.Locator("#option-label-size-143-item-167").ClickAsync();
+        }
+        public async Task ClickAddToCartButtonAsync()
+        {
+            await addToCartButton.ClickAsync();
         }
     }
 }
