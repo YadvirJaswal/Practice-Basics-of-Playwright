@@ -54,6 +54,10 @@ namespace Practice_Basics_of_Playwright.Pages
         {
             await hotSellerImage.ClickAsync();
         }
+        public async Task ClickOnSecondImageInHotsellerSectionAsync()
+        {
+            await page.GetByAltText("Breathe-Easy Tank").ClickAsync();
+        }
         public async Task HoverOnImageAsync()
         {
             await page.HoverAsync("//img[@alt='Radiant Tee']");
