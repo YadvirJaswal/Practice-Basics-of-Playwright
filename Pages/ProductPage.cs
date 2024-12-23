@@ -32,5 +32,10 @@ namespace Practice_Basics_of_Playwright.Pages
             var titleText = await title.TextContentAsync() ?? "";
             return titleText;
         }
+        public async Task<bool> VerifyTypeOfQuantityFieldAsync()
+        {
+            var type = await quantityField.GetAttributeAsync("type");
+            return type == "number";
+        }
     }
 }

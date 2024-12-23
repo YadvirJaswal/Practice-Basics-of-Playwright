@@ -31,5 +31,22 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(productPage.sizeOption).ToBeVisibleAsync();
             await Assertions.Expect(productPage.colorOption).ToBeVisibleAsync();
         }
+
+        [Fact]
+        public async Task Verify_QuantityField_Visibility_Functionality()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            // 1. Click on product Image from home page
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+
+            // Assert the visibility and functionality of quantity field
+            await Assertions.Expect(productPage.quantityField).ToBeVisibleAsync();
+            var isInputField = await productPage.VerifyTypeOfQuantityFieldAsync();
+            Assert.True(isInputField, "Quantity field is not a input element");
+        }
     }
 }
