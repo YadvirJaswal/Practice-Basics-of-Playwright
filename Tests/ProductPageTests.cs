@@ -80,5 +80,38 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(productPage.errorMessageForSizeOption).ToBeVisibleAsync();
             await Assertions.Expect(productPage.errorMessageForSizeOption).ToContainTextAsync("This is a required field.");
         }
+        [Fact]
+        public async Task Verify_AddToCart_NotSelectColorOption_ShouldDisplayErrorMessage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await productPage.SelectSizeOptionAsync();
+            await productPage.ClickAddToCartButtonAsync();
+
+            // Assert error message
+            await Assertions.Expect(productPage.errorMessageForColorOption).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.errorMessageForColorOption).ToContainTextAsync("This is a required field.");
+        }
+        [Fact]
+        public async Task Verify_AddToCart_NotSelectingOptions_ShouldDisplayErrorMessage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await productPage.ClickAddToCartButtonAsync();
+
+            // Assert
+            await Assertions.Expect(productPage.errorMessageForSizeOption).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.errorMessageForSizeOption).ToContainTextAsync("This is a required field.");
+            await Assertions.Expect(productPage.errorMessageForColorOption).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.errorMessageForColorOption).ToContainTextAsync("This is a required field.");
+        }
     }
 }
