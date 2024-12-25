@@ -19,6 +19,9 @@ namespace Practice_Basics_of_Playwright.Pages
         public readonly ILocator successMessage;
         public readonly ILocator errorMessageForSizeOption;
         public readonly ILocator errorMessageForColorOption;
+        private readonly ILocator productInfo;
+        public readonly ILocator addToCompareIcon;
+        public readonly ILocator addToWishList;
 
         public ProductPage(IPage page)
         {
@@ -32,6 +35,9 @@ namespace Practice_Basics_of_Playwright.Pages
             successMessage = page.GetByRole(AriaRole.Alert).First;
             errorMessageForSizeOption = page.Locator("#super_attribute\\[143\\]-error");
             errorMessageForColorOption = page.Locator("#super_attribute\\[93\\]-error");
+            productInfo = page.Locator(".product-info-main");
+            addToCompareIcon = productInfo.GetByRole(AriaRole.Link, new() { Name = "Add to Compare" });
+            addToWishList = productInfo.GetByRole(AriaRole.Link, new() { Name = "Add to Wish List" });
         }
         public async Task<string> GetTitleAfterClicking()
         {

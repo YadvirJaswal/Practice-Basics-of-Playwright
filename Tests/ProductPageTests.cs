@@ -113,5 +113,36 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(productPage.errorMessageForColorOption).ToBeVisibleAsync();
             await Assertions.Expect(productPage.errorMessageForColorOption).ToContainTextAsync("This is a required field.");
         }
+        [Fact]
+        public async Task Verify_AddToCompareIcon_ShouldBeVisible()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+
+            // Assert
+            await Assertions.Expect(productPage.addToCompareIcon).ToBeVisibleAsync();
+        }
+        [Fact]
+        public async Task Verify_ClickAddToCompareIcon_ShouldBeShowErrorMessage()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+
+            await page.WaitForURLAsync(page.Url);
+
+            await productPage.addToCompareIcon.ClickAsync();
+                      
+            // Assert
+            await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.successMessage).ToContainTextAsync("You added product Breathe-Easy Tank to the comparison list.");
+        }
     }
 }
