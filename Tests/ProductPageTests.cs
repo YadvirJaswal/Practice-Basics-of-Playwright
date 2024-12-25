@@ -4,13 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
+using Newtonsoft.Json;
 using Practice_Basics_of_Playwright.Core;
+using Practice_Basics_of_Playwright.Models;
 using Practice_Basics_of_Playwright.Pages;
 
 namespace Practice_Basics_of_Playwright.Tests
 {
     public class ProductPageTests : BaseTest
     {
+        private readonly Dictionary<string, List<TestCase>> testCaseData;
+        private const string productPageSheetName = "ProductPage_Tests";
+        private readonly List<TestCase> testCaseList;
+        public ProductPageTests()
+        {
+            testCaseData = excelReader.ReadExcelFile("Test Data/ECT-TestCases.xlsx", [productPageSheetName]);
+            testCaseList = testCaseData[productPageSheetName];
+            if (testCaseList.Count == 0)
+            {
+                throw new Exception("No test cases found");
+            }
+        }
         [Fact]
         public async Task Verify_AddToCartButton_ProductOptions_Visibility_Functionality()
         {
@@ -159,6 +173,40 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert
             await Assertions.Expect(page).ToHaveTitleAsync("Customer Login");
             await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
+        }
+        [Theory]
+        [InlineData("PP-010")]
+        public async Task AddToWishList_Login_ClickOnAddToWishList_ShouldNavigateAndPrompt(string testCaseId)
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+            var signInPage = new SignInPage(page,appSettings);
+
+            // Arrange test data
+            var testCase = testCaseList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<SignInUser>(testCase.TestData);
+            Assert.NotNull(testData);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickAddToWishListIconAsync();
+
+            // Assert
+            await Assertions.Expect(page).ToHaveTitleAsync("Customer Login");
+
+            // Log in to the application with valid credentials
+            await signInPage.SignInUserFromProductPageAsync(testData);
+
+            // Assert
+            // 6. Verify that the user is navigated to the wishlist page.
+            await Assertions.Expect(page).ToHaveTitleAsync("My Wish List");
+
+            // 7. Verify that a success message is displayed confirming the item was added to the wishlist.
+            await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
         }
     }
 }
