@@ -174,6 +174,7 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(page).ToHaveTitleAsync("Customer Login");
             await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
         }
+
         [Theory]
         [InlineData("PP-010")]
         public async Task AddToWishList_Login_ClickOnAddToWishList_ShouldNavigateAndPrompt(string testCaseId)
@@ -207,6 +208,23 @@ namespace Practice_Basics_of_Playwright.Tests
 
             // 7. Verify that a success message is displayed confirming the item was added to the wishlist.
             await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
+        }
+
+        [Fact]
+        public async Task Details_ClickOnDetailsTab_ShouldContainDescription()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickOnDetailsTabAsync();
+
+            // Assert
+            var doesDescriptionContainText = await productPage.DoesDescriptionExistAsync();
+            Assert.True(doesDescriptionContainText,"Description does'nt contain text.");
         }
     }
 }

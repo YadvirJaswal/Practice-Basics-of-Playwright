@@ -22,6 +22,8 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator productInfo;
         public readonly ILocator addToCompareIcon;
         public readonly ILocator addToWishList;
+        private readonly ILocator detailsTab;
+        private readonly ILocator descriptionTab;
 
         public ProductPage(IPage page)
         {
@@ -38,6 +40,8 @@ namespace Practice_Basics_of_Playwright.Pages
             productInfo = page.Locator(".product-info-main");
             addToCompareIcon = productInfo.GetByRole(AriaRole.Link, new() { Name = "Add to Compare" });
             addToWishList = productInfo.GetByRole(AriaRole.Link, new() { Name = "Add to Wish List" });
+            detailsTab = page.Locator("#tab-label-description");
+            descriptionTab = page.Locator("#description");
         }
         public async Task ClickAddToWishListIconAsync()
         {
@@ -66,6 +70,17 @@ namespace Practice_Basics_of_Playwright.Pages
         public async Task ClickAddToCartButtonAsync()
         {
             await addToCartButton.ClickAsync();
+        }
+        public async Task ClickOnDetailsTabAsync()
+        {
+            await detailsTab.ClickAsync();
+        }
+        public async Task<bool> DoesDescriptionExistAsync()
+        {
+            var firstParagraph = descriptionTab.Locator("p").First;
+            var paragraphExists = await firstParagraph.IsVisibleAsync();
+            var paragraphText = await firstParagraph.InnerTextAsync();
+            return paragraphExists && !string.IsNullOrEmpty(paragraphText);
         }
     }
 }
