@@ -39,6 +39,10 @@ namespace Practice_Basics_of_Playwright.Pages
             addToCompareIcon = productInfo.GetByRole(AriaRole.Link, new() { Name = "Add to Compare" });
             addToWishList = productInfo.GetByRole(AriaRole.Link, new() { Name = "Add to Wish List" });
         }
+        public async Task ClickAddToWishListIconAsync()
+        {
+            await addToWishList.ClickAsync();
+        }
         public async Task<string> GetTitleAfterClicking()
         {
             var titleText = await title.TextContentAsync() ?? "";

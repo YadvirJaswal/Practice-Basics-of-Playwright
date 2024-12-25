@@ -144,5 +144,21 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
             await Assertions.Expect(productPage.successMessage).ToContainTextAsync("You added product Breathe-Easy Tank to the comparison list.");
         }
+        [Fact]
+        public async Task AddToWishList_WithoutLogin_ShouldNavigateAndPrompt()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickAddToWishListIconAsync();
+
+            // Assert
+            await Assertions.Expect(page).ToHaveTitleAsync("Customer Login");
+            await Assertions.Expect(page.GetByRole(AriaRole.Alert).First).ToBeVisibleAsync();
+        }
     }
 }
