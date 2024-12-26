@@ -211,7 +211,7 @@ namespace Practice_Basics_of_Playwright.Tests
         }
 
         [Fact]
-        public async Task Details_ClickOnDetailsTab_ShouldContainDescription()
+        public async Task ProductInfo_ClickOnDetailsTab_ShouldContainDescription()
         {
             // Arrange
             var homePage = new HomePage(page);
@@ -225,6 +225,23 @@ namespace Practice_Basics_of_Playwright.Tests
             // Assert
             var doesDescriptionContainText = await productPage.DoesDescriptionExistAsync();
             Assert.True(doesDescriptionContainText,"Description does'nt contain text.");
+        }
+
+        [Fact]
+        public async Task ProductInfo_ClickOnMoreInfoTab_ShouldContainAddtionalAttributes()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickOnMoreInfoTabAsync();
+
+            // Assert
+            // Verify the table contains rows and each row has data
+            await productPage.VerifyMoreInfoContainsAttributesAsync();
         }
     }
 }
