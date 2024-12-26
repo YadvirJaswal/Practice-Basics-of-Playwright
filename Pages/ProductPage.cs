@@ -25,6 +25,9 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator detailsTab;
         private readonly ILocator descriptionTab;
         private readonly ILocator moreInfoTab;
+        private readonly ILocator reviewsTab;
+        public readonly ILocator CustomersReviews;
+        public readonly ILocator ReviewsForm;
 
         public ProductPage(IPage page)
         {
@@ -44,6 +47,9 @@ namespace Practice_Basics_of_Playwright.Pages
             detailsTab = page.Locator("#tab-label-description");
             descriptionTab = page.Locator("#description");
             moreInfoTab = page.Locator("#tab-label-additional");
+            reviewsTab = page.Locator("#tab-label-reviews");
+            CustomersReviews = page.Locator("#customer-reviews");
+            ReviewsForm = page.Locator("#review-form");
         }
         public async Task ClickAddToWishListIconAsync()
         {
@@ -124,6 +130,10 @@ namespace Practice_Basics_of_Playwright.Pages
                 Assert.True(hasNonEmptyCells, $"Row {i + 1} does not contain any non-empty cells.");
                 
             }
+        }
+        public async Task ClickOnReviewsTabAsync()
+        {
+            await reviewsTab.ClickAsync();
         }
     }
 }

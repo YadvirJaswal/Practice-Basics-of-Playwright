@@ -243,5 +243,22 @@ namespace Practice_Basics_of_Playwright.Tests
             // Verify the table contains rows and each row has data
             await productPage.VerifyMoreInfoContainsAttributesAsync();
         }
+
+        [Fact]
+        public async Task ProductInfo_ClickOnReviewsTab_ShouldContainsReviewsAndSubmissionForm()
+        {
+            // Arrange
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickOnReviewsTabAsync();
+
+            // Assert
+            await Assertions.Expect(productPage.CustomersReviews).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.ReviewsForm).ToBeVisibleAsync();
+        }
     }
 }
