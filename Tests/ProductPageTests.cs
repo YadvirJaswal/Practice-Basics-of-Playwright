@@ -256,9 +256,16 @@ namespace Practice_Basics_of_Playwright.Tests
             await page.WaitForURLAsync(page.Url);
             await productPage.ClickOnReviewsTabAsync();
 
+            await productPage.ReviewsForm.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible
+            });
+
             // Assert
             await Assertions.Expect(productPage.CustomersReviews).ToBeVisibleAsync();
             await Assertions.Expect(productPage.ReviewsForm).ToBeVisibleAsync();
+            await productPage.AssertFieldsOfReviewFormAsync();
+
         }
     }
 }

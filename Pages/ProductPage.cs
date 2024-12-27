@@ -28,6 +28,11 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator reviewsTab;
         public readonly ILocator CustomersReviews;
         public readonly ILocator ReviewsForm;
+        private readonly ILocator ratingField;
+        private readonly ILocator nickNameField;
+        private readonly ILocator summaryField;
+        private readonly ILocator reviewField;
+        private readonly ILocator submitReviewButton;
 
         public ProductPage(IPage page)
         {
@@ -50,6 +55,11 @@ namespace Practice_Basics_of_Playwright.Pages
             reviewsTab = page.Locator("#tab-label-reviews");
             CustomersReviews = page.Locator("#customer-reviews");
             ReviewsForm = page.Locator("#review-form");
+            ratingField = ReviewsForm.Locator(".review-control-vote");
+            nickNameField = ReviewsForm.Locator("#nickname_field");
+            summaryField = ReviewsForm.Locator("#summary_field");
+            reviewField = ReviewsForm.Locator("#review_field");
+            submitReviewButton = ReviewsForm.GetByRole(AriaRole.Button, new() { Name = "Submit Review" });
         }
         public async Task ClickAddToWishListIconAsync()
         {
@@ -134,6 +144,20 @@ namespace Practice_Basics_of_Playwright.Pages
         public async Task ClickOnReviewsTabAsync()
         {
             await reviewsTab.ClickAsync();
+        }
+        public async Task AssertFieldsOfReviewFormAsync()
+        {          
+            // Assert fields exist
+            Assert.NotNull(ratingField);
+            Assert.NotNull(nickNameField);
+            Assert.NotNull(summaryField);
+            Assert.NotNull(reviewField);
+
+            // Assert fields are visible
+            //Assert.True(await ratingField.IsVisibleAsync(), "Rating field is not visible");
+            Assert.True(await nickNameField.IsVisibleAsync(), "Nickname field is not visible");
+            Assert.True(await summaryField.IsVisibleAsync(), "Summary field is not visible");
+            Assert.True(await reviewField.IsVisibleAsync(), "Review field is not visible");
         }
     }
 }
