@@ -267,5 +267,33 @@ namespace Practice_Basics_of_Playwright.Tests
             await productPage.AssertFieldsOfReviewFormAsync();
 
         }
+
+        [Theory]
+        [InlineData("PP-014")]
+        public async Task ProductInfo_ClickReviewTab_EnterReview_ShouldSucceed(string testCaseId)
+        {
+            // Arrange test data
+            var testCase = testCaseList.Find(l => l.TestCaseId == testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<ReviewTestData>(testCase.TestData);
+            Assert.NotNull(testData);
+
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickOnReviewsTabAsync();
+
+           
+
+            await productPage.EnterReviewAsync(testData);
+
+            // Assert
+            await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.successMessage).ToHaveTextAsync("You submitted your review for moderation.");
+        }
     }
 }

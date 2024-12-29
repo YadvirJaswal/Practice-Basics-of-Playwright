@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
+using Practice_Basics_of_Playwright.Models;
 
 namespace Practice_Basics_of_Playwright.Pages
 {
@@ -146,7 +147,8 @@ namespace Practice_Basics_of_Playwright.Pages
             await reviewsTab.ClickAsync();
         }
         public async Task AssertFieldsOfReviewFormAsync()
-        {          
+        {
+            var ratingField = page.Locator("#Rating_3_label");
             // Assert fields exist
             Assert.NotNull(ratingField);
             Assert.NotNull(nickNameField);
@@ -154,10 +156,21 @@ namespace Practice_Basics_of_Playwright.Pages
             Assert.NotNull(reviewField);
 
             // Assert fields are visible
-            //Assert.True(await ratingField.IsVisibleAsync(), "Rating field is not visible");
+            Assert.True(await ratingField.IsVisibleAsync(), "Rating field is not visible");
+
             Assert.True(await nickNameField.IsVisibleAsync(), "Nickname field is not visible");
             Assert.True(await summaryField.IsVisibleAsync(), "Summary field is not visible");
             Assert.True(await reviewField.IsVisibleAsync(), "Review field is not visible");
+        }
+        public async Task EnterReviewAsync(ReviewTestData reviewData)
+        {
+            var rating = page.Locator("#Rating_4");
+            //var rating = page.GetByRole(AriaRole.Radio, new() { Name = "ratings[4]" });
+            await rating.CheckAsync();
+            await nickNameField.FillAsync(reviewData.Nickname);
+            await summaryField.FillAsync(reviewData.Summary);
+            await reviewField.FillAsync(reviewData.Review);
+            await submitReviewButton.ClickAsync();
         }
     }
 }
