@@ -53,6 +53,14 @@ namespace Practice_Basics_of_Playwright.Pages
             await passwordInput.FillAsync(signInUser.Password);
             await signInButton.ClickAsync();
         }
+        public async Task SignInUserFromProductPageAsync(SignInUser signInUser)
+        {
+            await emailInput.ClearAsync();
+            await emailInput.FillAsync(signInUser.Email);
+            await passwordInput.ClearAsync();
+            await passwordInput.FillAsync(signInUser.Password);
+            await signInButton.ClickAsync();
+        }
         public async Task EnterPasswordAsync(SignInUser signInUser)
         {
             await signInNavigationButton.ClickAsync();

@@ -8,7 +8,6 @@ namespace Practice_Basics_of_Playwright.Tests
 {
     public class HomePageTests : BaseTest
     {
-        private readonly SignInTestData testData;
         private readonly Dictionary<string, List<TestCase>> testCaseData;
         private const string homePageSheetName = "HomePage_Tests ";
         private readonly List<TestCase> homePageTestCasesList;
