@@ -295,5 +295,36 @@ namespace Practice_Basics_of_Playwright.Tests
             await Assertions.Expect(productPage.successMessage).ToBeVisibleAsync();
             await Assertions.Expect(productPage.successMessage).ToHaveTextAsync("You submitted your review for moderation.");
         }
+        [Theory]
+        [InlineData("PP-015")]
+        public async Task ProductInfo_ClickReviewTab_DoNotEnterAnythingInReviewForm_ShouldShownError(string testCaseId)
+        {
+            //Arrange
+            var testCase = testCaseList.Find(l => l.TestCaseId==testCaseId);
+            Assert.NotNull(testCase);
+            Assert.NotEmpty(testCase.TestData);
+            var testData = JsonConvert.DeserializeObject<ReviewTestData>(testCase.TestData);
+            Assert.NotNull(testData);
+
+            var homePage = new HomePage(page);
+            var productPage = new ProductPage(page);
+
+            // Act
+            await homePage.ClickOnSecondImageInHotsellerSectionAsync();
+            await page.WaitForURLAsync(page.Url);
+            await productPage.ClickOnReviewsTabAsync();
+            await productPage.EnterReviewAsync(testData);
+
+            // Assert
+            // 1. Assert error for nickname field
+            await Assertions.Expect(productPage.NickNameFieldError).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.NickNameFieldError).ToContainTextAsync("This is a required field.");
+            // 1. Assert error for summary field
+            await Assertions.Expect(productPage.SummaryFieldError).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.SummaryFieldError).ToContainTextAsync("This is a required field.");
+            // 1. Assert error for review field
+            await Assertions.Expect(productPage.ReviewFieldError).ToBeVisibleAsync();
+            await Assertions.Expect(productPage.ReviewFieldError).ToContainTextAsync("This is a required field.");
+        }
     }
 }

@@ -34,6 +34,10 @@ namespace Practice_Basics_of_Playwright.Pages
         private readonly ILocator summaryField;
         private readonly ILocator reviewField;
         private readonly ILocator submitReviewButton;
+        public readonly ILocator NickNameFieldError;
+        public readonly ILocator SummaryFieldError;
+        public readonly ILocator ReviewFieldError;
+
 
         public ProductPage(IPage page)
         {
@@ -61,6 +65,9 @@ namespace Practice_Basics_of_Playwright.Pages
             summaryField = ReviewsForm.Locator("#summary_field");
             reviewField = ReviewsForm.Locator("#review_field");
             submitReviewButton = ReviewsForm.GetByRole(AriaRole.Button, new() { Name = "Submit Review" });
+            NickNameFieldError = page.Locator("#nickname_field-error");
+            SummaryFieldError = page.Locator("#summary_field-error");
+            ReviewFieldError = page.Locator("#review_field-error");
         }
         public async Task ClickAddToWishListIconAsync()
         {
@@ -164,9 +171,9 @@ namespace Practice_Basics_of_Playwright.Pages
         }
         public async Task EnterReviewAsync(ReviewTestData reviewData)
         {
-            var rating = page.Locator("#Rating_4");
+            //var rating = page.Locator("#Rating_4");
             //var rating = page.GetByRole(AriaRole.Radio, new() { Name = "ratings[4]" });
-            await rating.CheckAsync();
+            //await rating.CheckAsync();
             await nickNameField.FillAsync(reviewData.Nickname);
             await summaryField.FillAsync(reviewData.Summary);
             await reviewField.FillAsync(reviewData.Review);
